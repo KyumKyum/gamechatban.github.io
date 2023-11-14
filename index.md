@@ -1,7 +1,7 @@
 ---
 layout: home
 author_profile: true
-title: "Deep Learning Project - Chatting Toxicity Analysis and Possible Report Reason Regression"
+title: "Deep Learning Project - Chatting Toxicity Analysis and Regressing Possible Report Reason"
 excerpt_separator: "<!--more-->"
 categories:
   - Post Formats
