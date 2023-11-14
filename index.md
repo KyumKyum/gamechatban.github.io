@@ -11,14 +11,48 @@ tags:
   - standard
 ---
 
-TODO: 작업 내용을 적습니다.
+# Index
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse auctor laoreet scelerisque. Ut in nulla in purus dignissim ullamcorper eget non metus. Suspendisse maximus elit eu purus lacinia lobortis. Fusce dignissim arcu a lorem convallis, ac aliquam libero ullamcorper. Praesent varius magna nunc, et posuere mi viverra quis. Fusce rhoncus malesuada tempor. Vivamus vitae interdum eros. Quisque id viverra est. Sed eget velit egestas, vestibulum lacus ac, interdum magna. Sed sit amet augue vehicula, rutrum est at, suscipit leo. Integer convallis risus lacinia risus euismod, non maximus eros dignissim. Donec a lectus libero. Phasellus posuere erat scelerisque orci dignissim, sed fermentum lorem tincidunt. Nullam eget quam at ipsum aliquet tincidunt. Quisque feugiat, elit at interdum dapibus, turpis tortor dignissim dui, in bibendum lectus urna laoreet metus.
+**I. Proposal**
 
-Maecenas mauris lectus, aliquet vel egestas a, interdum a ligula. Nunc accumsan mauris ipsum, molestie blandit dolor dapibus at. Nulla luctus pharetra viverra. Donec rutrum turpis sed quam convallis aliquet. Cras at velit sollicitudin, interdum lorem nec, pharetra odio. Etiam lectus urna, malesuada in risus eget, fringilla tempus risus. Aliquam a aliquam nisi. Maecenas porta tristique enim pharetra vehicula. Curabitur tempor ipsum et massa aliquam maximus. Etiam placerat mi et dolor porta rhoncus.
+1. Motivation
+2. What do you want to see at the end
 
-Donec dapibus a turpis vitae dapibus. In vehicula mi ut lorem aliquet faucibus. Mauris malesuada ligula at mauris tincidunt posuere. Etiam in faucibus diam. Sed porttitor, velit ac vehicula ultrices, dui diam bibendum turpis, porttitor aliquam tellus justo at sem. Morbi auctor, sapien sit amet fringilla commodo, lectus metus vulputate odio, non mollis libero orci nec nunc. Phasellus congue orci eu tortor sollicitudin, vulputate tempor felis pulvinar. Quisque nunc lacus, elementum at urna ut, rutrum ornare velit. Quisque blandit sem et lobortis condimentum. Integer tristique lacinia euismod. Mauris condimentum lorem ut tincidunt aliquam.
+**II. Datasets**
 
-Nulla rhoncus at justo non semper. Duis sit amet elit elit. Proin aliquet cursus lacinia. Vivamus luctus magna tortor, et placerat odio sodales scelerisque. Nulla varius dui nec eleifend vulputate. Sed molestie mi in sem egestas rhoncus. Aliquam ultricies in augue ac feugiat. Curabitur ipsum nunc, convallis aliquet tincidunt venenatis, pretium id nulla. Praesent egestas massa eu tincidunt pellentesque. Duis eget scelerisque libero. Etiam risus purus, facilisis vel purus id, commodo laoreet purus. Vivamus vitae condimentum orci. Aenean non risus ipsum. Praesent a tortor sed purus tempor accumsan. In eros justo, auctor non augue quis, finibus accumsan lectus.
+**III. Methodology**
 
-Cras in cursus justo. Pellentesque fringilla porttitor egestas. Fusce tellus libero, auctor vitae ultricies at, porta vitae odio. Phasellus malesuada neque sit amet libero vehicula aliquet id sit amet velit. Proin eu nibh nec justo lobortis bibendum a vitae dui. Ut ultrices placerat quam. Donec sed sapien mollis, hendrerit neque a, pellentesque massa. Ut vehicula ornare ex ac dignissim. Quisque vulputate eros eu dolor dignissim aliquet. Nunc vitae elit eu urna mollis semper lobortis pretium dui. Sed arcu est, sodales sit amet luctus eget, euismod sit amet lectus.
+1. Unspervised Learning
+2. spervised Learning
+
+**IV. Evaluation & Analysis**
+
+**V. Related Work (e.g., existing studies)**
+
+**VI. Conclusion: Discussion**
+
+# I. Proposal
+
+**1. Motivation**
+팀 게임을 하면 채팅 기능이 존재한다. 팀원들끼리 채팅을 통해 협력하고 소통하기 위함이다. 적들과 대화하는 것 또한 가능하다. 그러나 상대방을 실제로 마주하고 있지 않은 온라인의 특성 상 상대방을 불쾌하게 만드는 대화가 자주 등장한다.
+[플레이어의 개인 성향과 게임 내의 트롤링 행위의 관계]를 보면 트롤링이 일어나는 원인 중 '익명성', '시스템적 규제의 허술', '실시간', '다중성'으로 본다는 것을 알 수 있다. 또한 트롤링의 원인을 개인의 특성에서 둔 연구를 보면 트롤링이 재미, 지루함, 복수와 같은 심리적인 요인에서 나오는 것이라고 분석하였다.
+우리 조는 리그오브레전드(League of Legends)에서 report라 불리는 채팅 신고 내역을 분석하며 이러한 채팅을 단속하고 향후 보다 깨끗한 인터넷 채팅문화를 만들고자 이 프로젝트를 진행하였다.
+
+**2. What do you want to see at the end**
+우리 조는 리그오브레전드 채팅 신고 datasets에 TF-IDF를 사용하여 어떤 단어 또는 문장이 신고를 많이 받았는지를 분석하여 Toxic Level이라는 새로운 변수를 만들것이다. 이후 이를 데이터에 넣어 이를 기계학습시켜볼 것이다. 학습된 장치에 어떠한 채팅을 입력하고 이 채팅의 Toxic Level이 몇인지를 맞추게 한 다음, 이 수준이면 정지를 받을지 아닐지도 파악하게 할 것이다. 또한 정지의 이유가 무엇인지까지 나오게 하는 것이 우리의 목표이다.
+
+# II. Datasets
+
+# III. Methodology
+
+**1. Unspervised Learning**
+
+**2. spervised Learning**
+
+# IV. Evaluation & Analysis
+
+# V. Related Work (e.g., existing studies)
+
+이준명, 나정환, 도영임. (2016). 플레이어의 개인 성향과 게임 내의 트롤링 행위의 관계. 한국게임학회 논문지, 16(1), 63-71, 10.7583/JKGS.2016.16.1.63
+
+#VI. Conclusion: Discussion
