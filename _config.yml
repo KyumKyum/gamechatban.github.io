@@ -16,11 +16,11 @@ minimal_mistakes_skin    : "dark" # "air", "aqua", "contrast", "dark", "dirt", "
 
 # Site Settings
 locale                   : "ko-KR"
-title                    : "AI-X Project (TODO: Name Will be changed)"
+title                    : "Deep Learning Project - Chatting Toxicity Analysis and Possible Report Reason Regression"
 title_separator          : "&#124;"
 subtitle                 : # site tagline that appears below site title in masthead
-name                     : "Team Name"
-description              : "2023-2 AI-X Project"
+name                     : "2023 DL Project"
+description              : "2023 DL Project"
 url                      : "https://github.com/KyumKyum/gamechatban.github.io"
 baseurl                  : 
 repository               : "KyumKyum/gamechatban.github.io"
@@ -106,7 +106,7 @@ analytics:
 author:
   name             : "Team Name"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "이승현, 임규민, 장정원"
+  bio              : "생명과학과 2018023427 이승현\n, 정보시스템학과 2019014266 임규민\n, 정치외교학과 2022094366 장정원"
   location         : 
   email            :
   links:

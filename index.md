@@ -11,7 +11,13 @@ tags:
   - standard
 ---
 
-# Index
+## Deep Learning Project - Chatting Toxicity Analysis and Possible Report Reason Regression
+
+#### 비지도학습/지도학습 기반 게임 채팅 toxic level 측정 및 가능한 신고 사유 예측
+
+> 생명과학과 2018023427 이승현
+> 정보시스템학과 2019014266 임규민
+> 정치외교학과 2022094366 장정원
 
 **I. Proposal**
 
