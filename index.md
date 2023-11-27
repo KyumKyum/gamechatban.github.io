@@ -1,28 +1,26 @@
-# Members
-
-- 생명과학과 2018023427 이승현
-- 정보시스템학과 2019014266 임규민
-- 정치외교학과 2022094366 장정원
-
 # Index
 
 **I. Proposal**
 
 1. Motivation
-2. What do you want to see at the end
+2. Objective
 
-**II. Datasets**
+**II. Team Members**
 
-**III. Methodology**
+**III. Dataset**
+
+**IV. Project Strategy**
 
 1. Unspervised Learning
 2. Spervised Learning
 
-**IV. Evaluation & Analysis**
-
-**V. Related Work (e.g., existing studies)**
+**V. Evaluation & Analysis**
 
 **VI. Conclusion: Discussion**
+
+**VII. Related Works**
+
+---
 
 # I. Proposal
 
@@ -32,17 +30,51 @@
 
 해당 근거를 뒷받침하는 연구 결과 역시 존재한다. 논문 <<플레이어의 개인 성향과 게임 내의 트롤링 행위의 관계>>[^1] 에서 밝히기를, 트롤링이 일어나는 원인을 '익명성', '시스템적 규제의 허술', '실시간', '다중성'으로 분석하고 있다. 또한 트롤링의 원인을 개인의 특성에서 둔 연구를 보면 트롤링이 재미, 지루함, 복수와 같은 심리적인 요인에서 나오는 것이라고 분석하였다.
 
+[^1]: 이준명, 나정환, 도영임, 플레이어의 개인 성향과 게임 내의 트롤링 행위의 관계, 한국게임학회 논문지,2016,
+
 **((내용 추가! - 브릿지 내용))**
 
 **((해당 문단 내용을 조금 예쁘게 바꿔주세요!!))** 이러한 채팅을 단속하고 향후 보다 깨끗한 인터넷 채팅문화를 만들고자 이 프로젝트를 진행하였다. 우리 조는 리그오브레전드(League of Legends)라는 전세계적으로 유행하는 AOS 장르 게임의 채팅 신고 내역을 분석하여 해당 채팅이 사람으로 하여금 얼마나 불쾌하게 만드는지 비지도학습과 지도학습을 활용하여 분석하고자 한다.
 
-### **2. What do you want to see at the end** (
+### **2. Objective**
 
-((이 내용도 수정이 필요한데, 개괄의 내용이니 제가 이후에 수정을 하도록 하겠습니다.)) 우리 조는 리그오브레전드 채팅 신고 datasets에 TF-IDF를 사용하여 어떤 단어 또는 문장이 신고를 많이 받았는지를 분석하여 Toxic score이라는 새로운 변수를 만들것이다. 이후 이를 데이터에 넣어 이를 기계학습시켜볼 것이다. 학습된 장치에 어떠한 채팅을 입력하고 이 채팅의 Toxic Level이 몇인지를 맞추게 한 다음, 이 수준이면 정지를 받을지 아닐지도 파악하게 할 것이다. 또한 정지의 이유가 무엇인지까지 나오게 하는 것이 우리의 목표이다.
+해당 딥러닝 프로젝트는 비지도학습과 지도학습을 거쳐 채팅에 대한 전체적인 분석과 기계학습을 통한 toxic score 예측 모델과 신고 사유 분류 모델을 설계할 것이다. 개괄적인 프로세스는 다음과 같다.
 
-# II. Datasets
+**1. 비지도학습 단계 (Unsupervised Learning)**
 
-리그오브레전드(League of Legends)에서 report당한 채팅들에 관한 데이터셋이다. contents는 다음과 같다.
+- 1-1) TF-IDF (Term Frequency - Inverse Document Frequency) 가중치 값을 계산 및 활용하여, 각 채팅 단어의 빈도수를 정규화하여 많이 등장하고 영향력이 높은 단어의 가중치를 계산한다.
+- 1-2) 각 계산된 가중치를 바탕으로 각 채팅에 대한 toxic score를 계산한다.
+- 1-3) 이후 지도학습에 활용될 column만을 남겨놓는다.
+
+**2. 지도학습 단계 (Supervised Learning)**
+
+A. Toxic Score 예측 모델
+
+- 2-1) LSTM (Long Short-Term Memory) Model을 활용하여 예측 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 한다.
+- 2-2) LightGBM (Gradient Boosting) Model을 활용하여 예측 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 한다.
+
+B. 신고 사유 분류 모델
+
+- 2-3) Logistic Regression Model을 활용하여 분류 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 한다.
+- 2-4) SVM을 활용하여 분류 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 한다.
+
+**3. 그래프 및 학습 결과 분석 단계**
+
+---
+
+# II. Team Memebers
+
+- 생명과학과 2018023427 이승현: 데이터 전처리 전략, 그래프 및 딥러닝 결과 분석
+- 정보시스템학과 2019014266 임규민: 특징 공학 및 코드 작성
+- 정치외교학과 2022094366 장정원: 자료 수집 및 글 작성, 영상 촬영
+
+---
+
+# III. Dataset
+
+리그오브레전드(League of Legends)에서 report당한 채팅들에 관한 데이터셋이다. contents는 다음과 같다. (출처: Kaggle[^2])
+
+[^2]: https://www.kaggle.com/datasets/simshengxue/league-of-legends-tribunal-chatlogs
 
 - message: 신고당한 메세지 내용
 
@@ -74,10 +106,9 @@
 
 - champion_name: 채팅을 친 사용자가 플레이한 챔피언 이름
 
-Datasets은 kaggle에서 찾아냈으며 url은 다음과 같다.
-https://www.kaggle.com/datasets/simshengxue/league-of-legends-tribunal-chatlogs
+---
 
-# III. Methodology
+# IV. Project Strategy
 
 ### **1. Unspervised Learning**
 
@@ -93,23 +124,44 @@ TF의 계산 방법은 카운트 기반 단어표현 방법인 DTM(Document Term
 
 IDF는 Inverse Document Frequency이다. DF 값의 역수라는 뜻이다. DF는 전체 문서에서의 특정 단어가 등장한 문서 개수이다. 많은 문서에 등장할수록 그 단어의 가치는 줄어들게 된다. 그렇기에 역수를 취하면 적은 문서에 등장할수록 IDF의 값이 높아지게 된다. 이 둘 의 값을 곱한 TF\*IDF 값이 TF-IDF 값이다.
 
-우리 조는 TF-IDF을 통해 각 채팅에서...
-((여기에는 Methodology에 대한 내용을 제가 채우겠습니다!))
+((**TF-IDF에 대한 마무리 글을 적어주세요!**))
 
-IF-IDF를 사용하여 Datasets을 분석한 코드는 아래와 같다.
+#### Unsupervised Learning Strategy using TF-IDF
+
+위의 전략에서 이야기 했듯이, 다음과 같은 분석 단계를 거쳐 비지도학습의 결과를 얻을 것이다.
+
+- 1-1) TF-IDF (Term Frequency - Inverse Document Frequency) 가중치 값을 계산 및 활용하여, 각 채팅 단어의 빈도수를 정규화하여 많이 등장하고 영향력이 높은 단어의 가중치를 계산한다.
+- 1-2) 각 계산된 가중치를 바탕으로 각 채팅에 대한 toxic score를 계산한다.
+- 1-3) 이후 지도학습에 활용될 column만을 남겨놓는다.
+
+#### 0. Initialize
+
+**Package Import**
 
 ```R
 library(dplyr)
 library(tm)
+library(wordcloud)
+library(ggplot2)
+```
+
+먼저 필요한 R package를 불러온다. 필요한 패키지는 다음과 같다.
+
+- dplyr: 데이터 프레임 처리하는 함수군
+- tm: tect mining을 줄인 말. 텍스트 전처리를 위한 패키지
+- wordcloud: Word Cloud을 활용한 시각화를 위한 패키지
+- ggplot2: 비지도학습 결과를 plotting 하기 위한 패키지.
+
+**Dir Setting and Read Dataset**
+
+```R
 setwd("~/your_folder")
 chatlogs <- read.csv("./chatlogs.csv")
 ```
 
-먼저 필요한 R package를 불러온다. 자신의 폴더 위치에 맞게 설정한 뒤 csv 파일을 불러온다.
-dplyr: 데이터 프레임 처리하는 함수군
-tm: tect mining을 줄인 말. 텍스트 전처리를 위한 패키지
+Working Directory를 현재 폴더로 설정하고, 데이터 셋을 불러온다. 이후. 전처리 과정을 시행한다.
 
-기초적인 작업 이후 전처리 과정을 시행한다.
+#### 1. Feature Engineering
 
 **Ⅰ. Datasets 가지치기**
 
@@ -125,9 +177,12 @@ Datasets의 ‘association_to_offender’ 칼럼 중, “offender”에 해당�
 
 ```R
 champion_names <- read.csv("./champion_names.csv")
-부터
+
+pattern <- paste0("\\b(?:is|are|&gt|&lt|was|were|", paste(unique(c(champion_names$Champion, champion_names$Abbreviation)), collapse = "|"), ")\\b")
+
+chatlogs$message <- gsub(pattern, "", chatlogs$message, ignore.case = TRUE)
+
 write.csv(chatlogs, "processed.csv")
-까지
 ```
 
 리그오브레전드라는 게임 특성상 채팅에서 챔피언의 이름을 자주 말하게 된다. 이는 채팅 신고와 상관없는 단어이기에 champion_names.csv 파일을 이용해서 제거한다.
@@ -162,13 +217,16 @@ write.csv(concatenated, "concat.csv")
 
 이러한 전처리 과정 이후 TF-IDF matrix 분석을 한다. 이는 앞에서 합쳐진 문자열에 대해 TF-IDF를 처리하여 각 단어의 'toxic level'을 얻는 과정이다.
 
+#### 2. TF-IDF
+
 **Ⅰ. TF-IDF를 위한 말뭉치(corpus)를 생성하고 추가 전처리를 진행**
 
 ```R
 corpus <- Corpus(VectorSource(concatenated$concatenated_text))
-부터
-corpus <- tm_map(corpus, stripWhitespace) # Strip Whitespace
-까지
+corpus <- tm_map(corpus, content_transformer(tolower))
+corpus <- tm_map(corpus, removePunctuation)
+corpus <- tm_map(corpus, removeWords, stopwords("english"))
+corpus <- tm_map(corpus, stripWhitespace)
 ```
 
 말뭉치(corpus)는 자연어 연구를 위해 특정한 목적을 가지고 언어의 표본을 추출한 집합을 뜻한다. 우리 조는 TF-IDF를 처리하기 위하여 말뭉치를 생성한다. 전처리 과정을 거친 텍스트에서 구두점, 여백, 관사 등을 제거하고 모든 문자열을 소문자로 변환한다.
@@ -199,7 +257,7 @@ colnames(tf_idf) <- tf_idf_col_name
 tf_idf <- round((tf_idf * 1000), 2)
 ```
 
-iv. Toxic level을 얻기 위해 값을 보정하고 반올림한다.
+Toxic level을 얻기 위해 값을 보정하고 반올림한다.
 
 **Ⅴ. 새로운 데이터 프레임으로 변환**
 
@@ -209,7 +267,7 @@ tf_idf_df <- as.data.frame(tf_idf)
 write.csv(tf_idf_df, "toxic_lev.csv")
 ```
 
-v. 완료된 TF-IDF matrix를 새로운 데이터 프레임으로 변환하고 'toxicity_lev.csv'라는 CSV 파일로 내보낸다.
+완료된 TF-IDF matrix를 새로운 데이터 프레임으로 변환하고 'toxicity_lev.csv'라는 CSV 파일로 내보낸다.
 
 **Ⅵ. toxic score 정의 & 계산**
 
@@ -219,15 +277,17 @@ chatlogs$toxic_score <- 0
 for(i in 1:nrow(chatlogs)) {
   tlv <- 0 # Toxic Level for current chatlog
   message <- chatlogs$message[i]
-  terms <- unlist(strsplit(message, " "))
+  terms <- unlist(strsplit(message, " ")) # Split the message into terms.
   terms <- trimws(terms) # Trim term
   for (term in terms) {
-    row_idx <- which(rownames(tf_idf_df) == term)
-    if(!identical(row_idx, integer(0))){
-      weight_row <- tf_idf_df[row_idx, , drop = FALSE]
-      tlv <- tlv + rowSums(weight_row) # Add Weight
+    found <- term_scores$total_tfidf[term_scores$term == term] # Find such terms in term scores
+    head(found)
+    if(!identical(found,numeric(0))){ # if such term exists,
+      tlv <- tlv + found # Add the term score.
     }
- weight <- ifelse(chatlogs$severity[i] == "Normal", 0.6,
+  }
+  # Apply Weight based on severity.
+  weight <- ifelse(chatlogs$severity[i] == "Normal", 0.6,
                    ifelse(chatlogs$severity[i] == "Low", 0.3, 1))
 
   chatlogs$toxic_score[i] <- round((tlv * weight), 2)
@@ -238,6 +298,25 @@ write.csv(res_log, "offender_chatlog_with_toxic_score.csv")
 ```
 
 Offender의 채팅 toxic level을 toxic score라는 새로운 칼럼을 정의하여 재구성한다. 이후 채팅 로그의 메시지를 추출한 뒤 각 단어의 앞뒤 공백을 제거하고 해당 단어의 TF-IDF 가중치를 가져와 채팅 로그의 toxic score를 계산하고 해당 열에 값을 저장한다.
+
+#### Visualization
+
+```R
+# 1. Word Cloud -> Shows visualized output of tf-idf
+wordcloud(words = term_scores$term, freq = term_scores$total_tfidf, min.freq = 1, scale=c(3,0.5), colors=brewer.pal(8, "Dark2"))
+
+# 2. Scatter plot -> Shows the relationship between severity and number of reports, and resulting toxic score
+ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Case Reports vs Toxic Scores",
+       x = "Number of Case Reports",
+       y = "Toxic Score",
+       color = "Severity") +
+  theme_minimal()
+```
+
+- Term의 가중치가 높을수록 더욱 글씨가 커지는 word cloud을 통해 시각화를 진행했다.
+- '신고 횟수는 심각도에 반비례 한다'는 전처리 과정 중의 가정을 시각화를 통해 입증한다.
 
 지금까지의 설명을 하나의 코드로 나타내면 다음과 같다.
 
@@ -369,6 +448,11 @@ for(i in 1:nrow(chatlogs)) {
   chatlogs$toxic_score[i] <- round((tlv * weight), 2)
 }
 
+
+res_log <- chatlogs[, c("message", "most_common_report_reason", "toxic_score")]
+write.csv(res_log, "offender_chatlog_with_toxic_score.csv")
+
+
 #Visualization
 
 # 1. Word Cloud -> Shows visualized output of tf-idf
@@ -382,12 +466,6 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
        y = "Toxic Score",
        color = "Severity") +
   theme_minimal()
-
-
-res_log <- chatlogs[, c("message", "most_common_report_reason", "toxic_score")]
-write.csv(res_log, "offender_chatlog_with_toxic_score.csv")
-
-
 ```
 
 이렇게 나온 결과물의 구성이 어떻게 되어있는지 정리하면 다음과 같다.
@@ -400,16 +478,19 @@ write.csv(res_log, "offender_chatlog_with_toxic_score.csv")
 5. (그래프 사진 넣어주세요)
    위 그래프는 toxic score와 해당 유저의 신고 당한 횟수를 나타낸 것이다. 그래프는 toxic score이 높은 채팅일수록 적은 신고 횟수를 나타낸다. 이는 수위가 높은 채팅일수록 더 적은 횟수의 신고만으로도 처벌이 이루어졌음을 의미하고, 동시에 toxic score을 도출하는 과정이 정확히 이루어졌음을 시사한다.
 
-### **2. Spervised Learning** (글자크기 키워주세요)
+### **2. Spervised Learning**
 
-# IV. Evaluation & Analysis
+---
 
-# V. Related Work (References)
+# V. Evaluation & Analysis
 
-1번은 motivation에서 사용
-2~4 TF-IDF 설명에 사용
-5 dplyr 설명
-6 tm 설명
+---
+
+# VI. Conclusion: Discussion
+
+---
+
+# VI. Related Works
 
 Rajaraman, A.; Ullman, J.D, Mining of Massive Datasets, Data Mining, 2011, 1-17,
 Akiko Aizawa, An information-theoretic perspective of tf–idf measures, National Institute of Informatics, January 2003,
@@ -419,6 +500,4 @@ Manning, C. D.; Raghavan, P.; Schutze, H, 《Introduction to Information Retriev
 
 FEINERER, Ingo. Introduction to the tm Package Text Mining in R. Accessible en ligne: http://cran. r-project. org/web/packages/tm/vignettes/tm. pdf, 2023, 1
 
-# VI. Conclusion: Discussion
-
-[^1]: 이준명, 나정환, 도영임, 플레이어의 개인 성향과 게임 내의 트롤링 행위의 관계, 한국게임학회 논문지,2016,
+---
