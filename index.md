@@ -208,7 +208,7 @@ chatlogs$severity <- cut(
 )
 ```
 
-Datasets의 'case total reports' 값을 기반으로 "severity"를 만든다. severity는 3단계로 나누는데, case total reports가 3 이하인 경우 Severe(심각), 4이상 6이하인 경우 Normal(보통), 7 이상인 경우 Low(낮음)이다. 이는 case total reports가 낮은 경우 적은 사용으로도 신고될 만큼 심각성이 크다고 생각했기 때문이다.
+Datasets의 'case total reports' 값을 기반으로 "severity"를 만든다. severity는 3단계로 나누는데, case total reports가 3 이하인 경우 Severe(심각), 4 이상 6 이하인 경우 Normal(보통), 7 이상인 경우 Low(낮음)이다. 이는 case total reports가 낮은 경우 적은 사용으로도 신고될 만큼 심각성이 크다고 생각했기 때문이다.
 
 **Ⅳ. 문자열 합치기**
 
@@ -221,7 +221,7 @@ concatenated <- chatlogs %>%
 write.csv(concatenated, "concat.csv")
 ```
 
-신고 사유를 바탕으로 chatlog들을 그룹화한다. 그룹화 한 이후 문자열 합치기(concatenate)한다. 이렇게 신고 사유 별로 분류된 하나의 문자열을 새로운 feature인 ‘심각도(severity)’를 고려하여 작성된다. 이러한 새로운 csv 파일을 저장한다.
+신고 사유를 바탕으로 chatlog들을 그룹화한다. 그룹화한 이후 문자열 합치기(concatenate)한다. 이렇게 신고 사유별로 분류된 하나의 문자열을 새로운 feature인 ‘심각도(severity)’를 고려하여 작성된다. 이러한 새로운 csv 파일을 저장한다.
 
 이러한 전처리 과정 이후 TF-IDF matrix 분석을 한다. 이는 앞에서 합쳐진 문자열에 대해 TF-IDF를 처리하여 각 단어의 'toxic level'을 얻는 과정이다.
 
@@ -265,7 +265,7 @@ colnames(tf_idf) <- tf_idf_col_name
 tf_idf <- round((tf_idf * 1000), 2)
 ```
 
-Toxic level을 얻기 위해 값을 보정하고 반올림한다.
+toxic level을 얻기 위해 값을 보정하고 반올림한다.
 
 **Ⅴ. 새로운 데이터 프레임으로 변환**
 
@@ -478,13 +478,13 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 
 이렇게 나온 결과물의 구성이 어떻게 되어있는지 정리하면 다음과 같다.
 
-1. 각각의 열은 열은 각각 순번, 데이터셋에 적혀있던 순번, 채팅 내용, 신고 사유, toxic score 순서대로 정렬되어 있다. 예시는 다음과 같다.
+1. 각각의 열은 각각 순번, 데이터셋에 적혀있던 순번, 채팅 내용, 신고 사유, toxic score 순서대로 정렬되어 있다. 예시는 다음과 같다.
    (csv 파일에서 0점이랑 98.52점 있는 부분 스캔해서 올려주세요)
 2. 최저점은 0으로 실제 신고 사유와 무관한 채팅 속 단어들은 대부분 0점이다.
 3. 최고점은 98.52이고, 채팅의 길이가 길수록 toxic score가 높게 분포하는 경향을 가지고 있다.
 4. 비슷한 toxic score 임에도 채팅 길이의 차이가 있는 경우는 주로 적나라한 욕설이 있을수록 채팅이 짧아도 toxic score가 높게 측정되었다.
-5. (그래프 사진 넣어주세요)
-   위 그래프는 toxic score와 해당 유저의 신고 당한 횟수를 나타낸 것이다. 그래프는 toxic score이 높은 채팅일수록 적은 신고 횟수를 나타낸다. 이는 수위가 높은 채팅일수록 더 적은 횟수의 신고만으로도 처벌이 이루어졌음을 의미하고, 동시에 toxic score을 도출하는 과정이 정확히 이루어졌음을 시사한다.
+5. (Graph Photo: TBD)
+   위 그래프는 toxic score와 해당 유저의 신고 당한 횟수를 나타낸 것이다. 그래프는 toxic score가 높은 채팅일수록 적은 신고 횟수를 나타낸다. 이는 수위가 높은 채팅일수록 더 적은 횟수의 신고만으로도 처벌이 이루어졌음을 의미하고, 동시에 toxic score를 도출하는 과정이 정확히 이루어졌음을 시사한다.
 
 ### **2. Spervised Learning**
 
