@@ -17,8 +17,13 @@
 
 1. Unspervised Learning
    i) Learning Strategy
+   ii) Code Explanation
+   iii) Result Evaluation and Analysis
+   iv) Full Code
+2. Spervised Learning(Regression)
+   i) Learning Strategy
    ii) Result Evaluation and Analysis
-2. Spervised Learning
+3. Spervised Learning(Classification)
    i) Learning Strategy
    ii) Result Evaluation and Analysis
 
@@ -69,10 +74,9 @@ A. Toxic Score 예측 모델
 
 B. 신고 사유 분류 모델
 
-- 2-3) Logistic Regression Model을 활용하여 분류 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 한다.
-- 2-4) SVM을 활용하여 분류 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 한다.
+- 2-3) Random Forest Classifier Model을 활용하여 분류 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 한다.
 
-**3. 그래프 및 학습 결과 분석 단계**
+**각 비지도/지도 학습이 끝난 이후, 결과값과 오차율, 시긱화 및 그래프에 대한 분석을 실시할 것이다.**
 
 ---
 
@@ -128,7 +132,9 @@ B. 신고 사유 분류 모델
 
 비지도 학습(Unspervised Learning)은 기계학습의 일종이다. 데이터가 어떻게 구성되었는지를 알아내는 문제의 범주에 속하며 입력값에 대한 목표치가 주어지지 않는다.
 
-#### Unsupervised Learning Methodology: TF-IDF
+#### i. Learning Strategy
+
+###### Unsupervised Learning Methodology: TF-IDF
 
 TF-IDF는 문서 내 단어마다 중요도를 고려하여 가중치를 주는 통계적인 단어 표현 방법이다. TF는 단어의 빈도를 고려하는 것이고, IDF는 역 문서 빈도를 고려하는 것으로 이 둘의 곱으로 TF-IDF를 구한다.
 
@@ -140,15 +146,15 @@ IDF는 Inverse Document Frequency이다. DF 값의 역수라는 뜻이다. DF는
 
 이렇게 단어 빈도와 문서 빈도를 같이 고려하여 계산하기에 TF-IDF는 뛰어난 성능으로 높은 정확도를 보인다. 또한 용어마다 점수를 메기기에 직관적으로 확인이 가능하며 이후 진행할 toxic score를 계산하기 용이하다는 장점도 가지고 있다. 이러한 이유로 우리 조는 비지도 학습의 방법으로 TF-IDF를 활용하여 부정적인 영향을 끼치는 채팅을 분석해 볼 것이다.
 
-#### Unsupervised Learning Strategy using TF-IDF
-
-위의 전략에서 이야기 했듯이, 다음과 같은 분석 단계를 거쳐 비지도학습의 결과를 얻을 것이다.
+TF-IDF을 활용하여, 다음과 같은 분석 단계를 거쳐 비지도학습의 결과를 얻을 것이다.
 
 - 1-1) TF-IDF (Term Frequency - Inverse Document Frequency) 가중치 값을 계산 및 활용하여, 각 채팅 단어의 빈도수를 정규화하여 많이 등장하고 영향력이 높은 단어의 가중치를 계산한다.
 - 1-2) 각 계산된 가중치를 바탕으로 각 채팅에 대한 toxic score를 계산한다.
 - 1-3) 이후 지도학습에 활용될 column만을 남겨놓는다.
 
-#### 0. Initialize
+#### ii. Code Explanation
+
+###### 0. Initialize
 
 **Package Import**
 
@@ -175,7 +181,7 @@ chatlogs <- read.csv("./chatlogs.csv")
 
 Working Directory를 현재 폴더로 설정하고, 데이터 셋을 불러온다. 이후. 전처리 과정을 시행한다.
 
-#### 1. Feature Engineering
+###### 1. Feature Engineering
 
 **Ⅰ. Datasets 가지치기**
 
@@ -231,7 +237,7 @@ write.csv(concatenated, "concat.csv")
 
 이러한 전처리 과정 이후 TF-IDF matrix 분석을 한다. 이는 앞에서 합쳐진 문자열에 대해 TF-IDF를 처리하여 각 단어의 'toxic level'을 얻는 과정이다.
 
-#### 2. TF-IDF
+###### 2. TF-IDF
 
 **Ⅰ. TF-IDF를 위한 말뭉치(corpus)를 생성하고 추가 전처리를 진행**
 
@@ -313,7 +319,7 @@ write.csv(res_log, "offender_chatlog_with_toxic_score.csv")
 
 Offender의 채팅 toxic level을 toxic score라는 새로운 칼럼을 정의하여 재구성한다. 이후 채팅 로그의 메시지를 추출한 뒤 각 단어의 앞뒤 공백을 제거하고 해당 단어의 TF-IDF 가중치를 가져와 채팅 로그의 toxic score를 계산하고 해당 열에 값을 저장한다.
 
-#### Visualization
+###### 3. Visualization
 
 ```R
 # 1. Word Cloud -> Shows visualized output of tf-idf
@@ -332,7 +338,38 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 - Term의 가중치가 높을수록 더욱 글씨가 커지는 word cloud을 통해 시각화를 진행했다.
 - '신고 횟수는 심각도에 반비례 한다'는 전처리 과정 중의 가정을 시각화를 통해 입증한다.
 
-지금까지의 설명을 하나의 코드로 나타내면 다음과 같다.
+#### iii. Result Evaluation and Analysis
+
+###### 1. Resulting Dataframe
+
+1. 각각의 열은 각각 순번, 데이터셋에 적혀있던 순번, 채팅 내용, 신고 사유, toxic score 순서대로 정렬되어 있다.
+   <img width="658" alt="tf_idf_df" src="https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/920ab174-c1bb-46ab-a1bd-305df5fef27e">
+
+2. 최저점은 0으로 실제 신고 사유와 무관한 채팅 속 단어들은 대부분 0점이다.
+   <img width="557" alt="tf_idf_low" src="https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/3aba0e8c-0ba9-42af-a1c3-0113efed3dfb">
+
+3. 최고점은 98.52이고, 채팅의 길이가 길수록 toxic score가 높게 분포하는 경향을 가지고 있다.
+   <img width="658" alt="tf_idf_high" src="https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/87111630-63d9-4585-8570-6e51219918fc">
+
+4. 비슷한 toxic score 임에도 채팅 길이의 차이가 있는 경우는 주로 적나라한 욕설이 있을수록 채팅이 짧아도 toxic score가 높게 측정되었다.
+
+###### 2. Result Analysis
+
+**1. Scatter Plot (Case of Report and Severity)**
+![TF_IDF  Scatter Plot](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/4ba98d24-b777-44d7-9cec-1fa05b4a8c06)
+
+- 위 그림은 TF-IDF 모델의 toxic score와 해당 유저의 신고 당한 횟수를 나타낸 것이다. 그래프는 toxic score이 높은 채팅일수록 적은 신고 횟수를 나타낸다.
+
+- 이는 수위가 높은 채팅일수록 더 적은 횟수의 신고만으로도 처벌이 이루어졌음을 의미하고, 동시에 toxic score을 도출하는 과정이 정확히 이루어졌음을 시사한다.
+
+**2. Word Cloud**
+![TF_IDF  Word Cloud](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/0225d1c5-cd98-4dad-9d2b-42a34fc33b4b)
+
+- 위 그림은 TF-IDF 결과를 토대로 word cloud를 생성한 결과이다. 해당 word cloud는 특정 단어의 가중치가 높아질수록 단어의 크기가 커지는 형태인데, 상대적으로 일상에서 많이 쓰이는 단어가 상대적으로 큰 크기를 나타내는 것을 볼 수 있다.
+
+- 해당 시각화 결과물에서 주목해야 할 부분은 눈에 잘 보이는 단어들이 아닌 오히려 작아서 잘 보이지 않는 단어들이다. 앞선 scatter plot의 결과와 마찬가지로 전체 말뭉치(corpus) 중 특정 단어가 많이 언급된다는 의미는 반복된 표현임에도 toxic level이 낮아 실제 신고로 이어진 빈도가 낮다는 것이다.
+
+#### iv. Full Code
 
 ```R
 # AI-X Final Project
@@ -482,15 +519,7 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
   theme_minimal()
 ```
 
-이렇게 나온 결과물의 구성이 어떻게 되어있는지 정리하면 다음과 같다.
-
-1. 각각의 열은 각각 순번, 데이터셋에 적혀있던 순번, 채팅 내용, 신고 사유, toxic score 순서대로 정렬되어 있다. 예시는 다음과 같다.
-   (csv 파일에서 0점이랑 98.52점 있는 부분 스캔해서 올려주세요)
-2. 최저점은 0으로 실제 신고 사유와 무관한 채팅 속 단어들은 대부분 0점이다.
-3. 최고점은 98.52이고, 채팅의 길이가 길수록 toxic score가 높게 분포하는 경향을 가지고 있다.
-4. 비슷한 toxic score 임에도 채팅 길이의 차이가 있는 경우는 주로 적나라한 욕설이 있을수록 채팅이 짧아도 toxic score가 높게 측정되었다.
-5. (Graph Photo: TBD)
-   위 그래프는 toxic score와 해당 유저의 신고 당한 횟수를 나타낸 것이다. 그래프는 toxic score가 높은 채팅일수록 적은 신고 횟수를 나타낸다. 이는 수위가 높은 채팅일수록 더 적은 횟수의 신고만으로도 처벌이 이루어졌음을 의미하고, 동시에 toxic score를 도출하는 과정이 정확히 이루어졌음을 시사한다.
+---
 
 ### **2. Spervised Learning**
 
