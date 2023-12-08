@@ -638,7 +638,7 @@ embedding_dim <- round(sqrt(vocabulary_size))
 
 각 메시지에서 고유한 단어를 추출한다. 어휘 크기는 input dim 값이고, outd의 크기는 어휘 크기의 제곱근으로 설정하였다.
 
-**Ⅲ. 임베딜 레이어 추가**
+**Ⅲ. 임베딩 레이어 추가**
 
 ```R
 model %>%
@@ -943,6 +943,271 @@ residuals <- predictions - test_labels
 qqnorm(residuals)
 #Add a straight line, which passes first and third quatiles of the data, for a reference line to the Q-Q plot.
 qqline(residuals, col = "red")
+```
+
+### **3. Spervised Learning (Classification)**
+
+**_TODO: 간단한 Introduction! (저희가 classification을 왜 하는지에 대한 1~2문단!)_**
+
+#### i) Learning Strategy
+
+###### Random Forest Classifier
+
+Random Forest는 머신러닝 기법 중 하나고, 오버피팅을 방지하기 위해, 최적의 기준 변수를 랜덤 선택한다. Forest라는 말이 들어간 이유는 마치 숲을 이루듯이 여러 개의 의사결정트리들이 앙상블을 형성하여 Random Forest를 만들기 때문이다.
+
+여기서 앙상블이란 강력한 하나의 모델을 사용하지 않고, 약한 여러 개의 모델을 사용하는 것이다. 의사결정트리들의 예측들을 조합하여 결론을 도출한다. 다양한 예측들을 이용하기에 더 정확한 예측이 가능해진다.
+
+의사결정트리의 알고리즘을 먼저 살펴보면 Random Forest의 이해가 쉬울 것이다. 먼저 부트스트래핑(Bootstraping)이라는 데이터 셈플링 방법을 시행한다. 이는 데이터에서 샘플링을 할 때 복원추출을 한다. 학습데이터셋을 여러가지로 만들어 유니크하다는 특징을 가지고 있다. 부트스트래핑 한 데이터셋을 통해 의사결정트리들을 만든다. 작은 나무들이기에 노드가 적고 특성이 많지 않다는 특징이 있다. 모든 특성을 사용하지 않고, 몇 개의 특성만 골라서 사용하는 것이다.
+
+이후 의사결정트리들을 합치는 과정(Aggregating)을 거친다. 이는 문제의 종류에 따라 방식이 달라진다. 회귀 문제의 경우 기본 모델들의 결과들을 평균 내고, 분류 문제일 경우 다수결로 투표해서 가장 많은 투표를 받은 것을 결과로 낸다.
+
+Random Forest는 분류와 회귀 문제를 모두 다룰 수 있으며 편의성과 유연성이 뛰어나다. 결측치를 다루기 쉽고, 대용량 데이터 처리가 쉽다는 장점도 가지고 있다. 또한 과적합 문제를 해결해주고, 특성중요도를 구할 수 있다. 이러한 장점을 가지고 있기에 우리 조는 지도학습의 장치로 Random Forest를 사용할 것이다.
+
+#### ii) Code Explanation
+
+###### 0. Initialize
+
+**I. Package Import**
+
+```R
+library(randomForest)
+library(caret)
+library(pROC)
+```
+
+먼저 필요한 R package를 불러온다. 필요한 패키지는 다음과 같다.
+
+- randomForest: Random Forest 패키지
+- caret: 복잡한 회귀와 분류 문제에 대한 모형 훈련과 조절과정을 간소화하는 패키지
+- pROC: pROC curve 패키지
+
+**II. Dir Setting and Read Dataset**
+
+```R
+setwd("~/your_folder")
+processed_df <- read.csv('./offender_chatlog_with_toxic_score.csv')
+sampled_df <- processed_df[complete.cases(processed_df[,c("message", "most_common_report_reason")]),]
+```
+
+Working Directory를 현재 폴더로 설정하고, 전처리 과정을 거친 데이터 셋을 불러온다. 데이터셋에서 결측치는 제거한다.
+
+###### 1.Feature Engineering
+
+**Ⅰ. 범주형 변수로 변환**
+
+```R
+sampled_df$most_common_report_reason = as.factor(sampled_df$most_common_report_reason)
+```
+
+'most_common_report_reason' 을 범주형으로 factorize한다. 변수들은 범주형과 연속형으로 나눠지는데, 'most_common_report_reason'은 이산적으로 나누어져야 하는데 데이터기에 범주형으로 바꿔주는 작업을 해야한다.
+
+범주형으로 바꾸는 함수는 as.factor()이고, 'most_common_report_reason'라는 기존에 있는 변수를 범주형으로 덮어쓰기 위해 위의 코드를 사용한다.
+
+**Ⅱ. 정수 시퀀스 변환**
+
+```R
+set.seed(sample(100:1000,1,replace=F)) # Random sampling
+trainIndex <- createDataPartition(sampled_df$most_common_report_reason, p = 0.8, list = FALSE)
+train_data <- sampled_df[trainIndex, ]
+test_data <- sampled_df[-trainIndex, ]
+
+train_features <- setdiff(names(train_data), "most_common_report_reason")
+test_features <- setdiff(names(test_data), "most_common_report_reason")
+```
+
+Supervised Learning(Regression)에서 사용한 것과 동일하게 데이터를 학습데이터와 테스트 데이터로 랜덤하게 분할한다. 비율은 학습데이터가 75%, 테스트 데이터가 25%이다.
+
+이후 train_data와 test_data 간의 column이 일치하는지 확인한다.
+
+###### 2. Random Forest Classification
+
+**Ⅰ. 모델학습**
+
+```R
+rf_start_time <- Sys.time()
+
+rf_model <- randomForest(most_common_report_reason ~ ., data = train_data, ntree = 100)
+
+rf_end_time <- Sys.time()
+
+rf_elapsed_time <- rf_end_time - rf_start_time
+cat("Training Time (SVM): ", rf_elapsed_time, "\n")
+```
+
+모델을 학습시키고 이 과정에서 학습 시작 시간과 종료 시간을 체크한다. 이후 경과 시간을 평가한다.
+
+**Ⅱ. 모델 테스트**
+
+```R
+rf_predictions <- predict(rf_model, newdata = test_data)
+
+confusion_matrix_rf <- table(Actual = test_data$most_common_report_reason, Predicted = rf_predictions)
+accuracy_rf <- sum(diag(confusion_matrix_rf)) / sum(confusion_matrix_rf)
+```
+
+위에서 학습시킨 모델을 토대로 'test_data'에 대한 예측을 수행하게 한다. 이후 혼돈행렬과 정확도로 나타낸다.
+
+**Ⅲ. 결과 출력**
+
+```R
+print("Confusion Matrix (Random Forest):")
+print(confusion_matrix_rf)
+cat("Accuracy (Random Forest):", accuracy_rf, "\n")
+```
+
+Random Forest 예측결과에 따라 Confusion Matrix와 정확도를 출력하는 작업을 한다.
+
+###### 3. Visualization
+
+**I. 시각화: Heatmap**
+
+```R
+conf_mat_rf <- confusionMatrix(rf_predictions, test_data$most_common_report_reason)
+
+conf_matrix_values <- conf_mat_rf$table
+
+heatmap(conf_matrix_values,
+        col = c("white", "lightblue", "blue"),
+        main = "Confusion Matrix (Random Forest)",
+        xlab = "Predicted",
+        ylab = "Actual")
+```
+
+Random Forest 모델의 예측 결과를 시각화하기 위해 Confusion Matrix를 히트맵(Heatmap)으로 표현하는 작업을 진행한다.
+
+확률을 셋으로 나눠서 확률이 높은 순서부터 blue, lightblue, white이다.
+
+**II. 시각화: ROC curve**
+
+```R
+rf_probs <- as.numeric(predict(rf_model, newdata = test_data, type = "response"))
+
+actual_labels_binary <- as.numeric(test_data$most_common_report_reason) - 1
+
+roc_curve <- roc(actual_labels_binary, rf_probs)
+
+plot(roc_curve, col = "blue", main = "ROC Curve for Random Forest",
+     col.main = "darkblue", col.lab = "black", lwd = 2)
+```
+
+Random Forest에 대한 ROC curve를 생성하고 시각화는 작업을 수행한다.
+
+#### iii) Result Evaluation and Analysis
+
+- Random forest 모델을 활용하여 도출된 confusion matrix를 각각 Heat map과 ROC curve로 시각화 하였다. 이때 heat map은 채팅 신고 사유의 예측 값과 실제 값을 비교하는 confusion matrix를 경우의 수에 따라 색상의 진한 정도로 시각화한 것이다.
+
+  - **Confusion matrix**는 모델의 훈련을 통한 예측의 성능을 측정하기 위해 예측값과 실제 값을 비교하기 위한 표를 의미한다.
+    <img width="480" alt="Cfm" src="https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/6c89d411-2bb3-40b7-8469-16ce21568406">
+
+  - 위 표에서는 예측 값과 실제 값의 일치 여부에 따라 총 4개의 경우의 수로 나타낸 것이다. 각각 TP(True Positive)는 긍정예측을 성공, TN(True Negative)는 부정예측을 성공, FP(False Positive)는 긍정예측을 실패, FN(False Negative)는 부정예측을 실패한 경우를 의미한다. 위 경우의 수가 발생한 횟수를 계산하여 정확도, 민감도, 정밀도 등의 평가 척도를 계산할 수 있다.
+
+**1. RF-Classifier: Heatmap**
+
+![Heatmap (improved)](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/a5326c3d-fb4f-46dd-8f81-6fa1c5a5225f)
+
+- Classifier Model의 Confusion Matrix를 Heatmap으로 시각화한 결과이다.
+- Heat map을 살펴보면 예측 신고 사유와 실제 신고 사유가 각각 6가지 존재한다.
+  - 신고 사유 Inappropriate Name(부적절한 이름), Spamming(스팸성 채팅)는 모두 가장 높은 비율로 예측 신고 사유와 실제 신고 사유가 일치했다.
+  - 가장 정확도가 낮은 예측 값은 신고 사유 Negative Attitude였는데 이는 Inappropriate Name 사유만을 제외한 나머지 실제 신고 사유에 모두 높은 비율로 분포했다.
+
+**2. RF-Classifier: ROC Curve**
+
+- ROC curve는 False Positive Rate(FPR)와 True Positive Rate(TPR)를 각각 x축, y축에 표시한 그래프로 모델의 민감도(sensitivity)와 특이도(specificity)를 평가하기 위해 사용한다. Heatmap에 이어, ROC Curve 역시 random forest에서 도출된 confusion matrix를 시각화 하는 데에 사용되었다.
+
+![ROC Curve](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/043588be-5ffe-4cc6-b1d2-84bf054e61d7)
+
+- ROC curve는 일단 그래프 자체가 참조선 위에 그려졌다. 그러나 이론적으로 정확도가 높다고 판별하는 기준인 AUC 값 0.8 보다 높다고 보기는 어렵다.
+- 이는 앞선 confusion matrix의 heat map을 통해서도 확인했듯이 True Positive Rate(TPR)가 높다고 보기 어려웠다. 2개의 신고 사유를 제외하곤 예측 값과 실제 값의 차이가 컸기 때문이다.
+- 이로 인해 TPR을 나타내는 ROC curve의 sensitivity 값의 빠른 증가와 참조선을 상회하는 크기의 그래프의 기울기를 그림에서 찾아볼 수 없었다.
+
+#### iv) Full Code
+
+```R
+# AI-X Final Project
+# Supervised Learning after doing unsupervised learning.
+# Part 2: Classifying Common Report Reason of Chatting
+
+# Dataset: A chatlog with toxic score assessed by unsupervised learning.
+# Column: X(id), Message, Most common report reason, Toxic Score
+
+# Load required libraries
+library(randomForest) # Random Forest Model
+library(caret) # Confusion Matrix
+library(pROC) # pROC Curve
+
+
+setwd("~/Desktop/Dev/HYU/2023-02/AI-X/project/gamechatban") # Change this value to your working dir.
+
+# Read a dataset for supervised learning.
+processed_df <- read.csv('./offender_chatlog_with_toxic_score.csv')
+# Remove missing value
+sampled_df <- processed_df[complete.cases(processed_df[,c("message", "most_common_report_reason")]),]
+
+# Factorize the target variable 'most common report reason'.
+sampled_df$most_common_report_reason = as.factor(sampled_df$most_common_report_reason)
+
+# Split the data into training and testing sets
+set.seed(sample(100:1000,1,replace=F)) # Random sampling
+trainIndex <- createDataPartition(sampled_df$most_common_report_reason, p = 0.8, list = FALSE)
+train_data <- sampled_df[trainIndex, ]
+test_data <- sampled_df[-trainIndex, ]
+
+# Make sure the columns match between train_data and test_data
+train_features <- setdiff(names(train_data), "most_common_report_reason")
+test_features <- setdiff(names(test_data), "most_common_report_reason")
+
+# Model: Random Forest Classifier
+rf_start_time <- Sys.time()
+
+# Train a Random Forest model
+rf_model <- randomForest(most_common_report_reason ~ ., data = train_data, ntree = 100)
+
+# Check ending time
+rf_end_time <- Sys.time()
+
+# Calcualte Elapsed time;
+rf_elapsed_time <- rf_end_time - rf_start_time
+cat("Training Time (SVM): ", rf_elapsed_time, "\n")
+
+# Make predictions on the test set
+rf_predictions <- predict(rf_model, newdata = test_data)
+
+# Evaluate the Random Forest model
+confusion_matrix_rf <- table(Actual = test_data$most_common_report_reason, Predicted = rf_predictions)
+accuracy_rf <- sum(diag(confusion_matrix_rf)) / sum(confusion_matrix_rf)
+
+# Display confusion matrix and accuracy for Random Forest
+print("Confusion Matrix (Random Forest):")
+print(confusion_matrix_rf)
+cat("Accuracy (Random Forest):", accuracy_rf, "\n")
+
+# Visualization (Confusion Matrix Plot for Random Forest)
+conf_mat_rf <- confusionMatrix(rf_predictions, test_data$most_common_report_reason)
+# Extract confusion matrix values
+conf_matrix_values <- conf_mat_rf$table
+
+# Plot the confusion matrix
+heatmap(conf_matrix_values,
+        col = c("white", "lightblue", "blue"),
+        main = "Confusion Matrix (Random Forest)",
+        xlab = "Predicted",
+        ylab = "Actual")
+
+# ROC Curve
+#The Receiver Operating Characteristic (ROC) curve is a graphical representation that illustrates the performance of a binary classification model across different discrimination thresholds.
+# It plots the True Positive Rate (Sensitivity) against the False Positive Rate (1 - Specificity) for various threshold values.
+# Make predictions on the test set
+rf_probs <- as.numeric(predict(rf_model, newdata = test_data, type = "response"))
+
+# Create binary labels for ROC curve
+actual_labels_binary <- as.numeric(test_data$most_common_report_reason) - 1  # Assuming binary classification
+
+# Create ROC curve
+roc_curve <- roc(actual_labels_binary, rf_probs)
+
+# Plot the ROC curve
+plot(roc_curve, col = "blue", main = "ROC Curve for Random Forest",
+     col.main = "darkblue", col.lab = "black", lwd = 2)
 ```
 
 ---
