@@ -20,12 +20,16 @@
    ii) Code Explanation
    iii) Result Evaluation and Analysis
    iv) Full Code
-2. Spervised Learning(Regression)
+2. Spervised Learning (Regression)
    i) Learning Strategy
-   ii) Result Evaluation and Analysis
-3. Spervised Learning(Classification)
+   ii) Code Explanation
+   iii) Result Evaluation and Analysis
+   iv) Full Code
+3. Spervised Learning (Classification)
    i) Learning Strategy
-   ii) Result Evaluation and Analysis
+   ii) Code Explanation
+   iii) Result Evaluation and Analysis
+   iv) Full Code
 
 **V. Evaluation & Analysis**
 
@@ -521,7 +525,425 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 
 ---
 
-### **2. Spervised Learning**
+### **2. Spervised Learning (Regression)**
+
+지도 학습(Supervised Learning)은 비지도 학습과는 다르게 예를 통해 학습하도록 설계된다. 관여자인 인간은 문제에 대한 답을 이미 알고 있는 것이다. 인공지능이 이를 알아낼 때 까지 훈련시키고자 할 때 사용한다.
+
+**_\_TODO: Regression, 목적에 대한 설명 글 적기_**
+
+#### i) Learning Strategy
+
+###### Supervised Learning Methodology: LSTM
+
+LSTM이란 Long Short-Term Memory Network의 약자로, RNN(Recurrent Neural Network)의 일종이다. 또한 RNN은 전통적인 전통적인 neural network에서 일어나는 문제를 해결하고자 만든 모델이다. 그렇기에 LSTM을 설명하기 위해선 우선 neural network와 RNN에 대한 설명이 선행되어야 할 것이다.
+
+우선 neural network에 대한 설명이다. 전통적 컴퓨터는 동물의 뇌와 다른 구조적 차이를 가지고 있다. 그렇기에 동물의 뇌가 아주 단순히 처리할 수 있는 내용도 쉽게 처리 하기 어려웠다. 이를 해결하기 위한 방법이 생물의 신경망과 비슷하게 인공신경망을 만들어 낸 것이다. 생물학적 뉴런의 동작원리와 같이 여러 입력을 받고 이 입력값들이 일정 수준을 넘어서면 시그모이드 함수라는 활성화 함수를 활용하여 출력값을 내보내게 되는 것이다.
+
+그러나 전통적인 neural network에서는 생각을 지속적으로 하지 못한다는 단점이 있다. 이전에 일어나는 사건을 바탕으로 나중에 일어나는 사건을 생각할 수 없다는 것이다. 이러한 문제를 해결하기 위하여 만든 모델이 RNN이다. RNN또한 neural network이기에 입력값을 받아 출력값을 내놓는다. 그러나 스스로 반복하는 과정을 추가하여 이전 단계에서 얻은 정보가 지속되도록 하는것이다. 이렇게 RNN의 체인처럼 이어지는 성질은 음성 인식, 언어 모델링, 번역, 이미지 주석 생성 등 다양한 분야에서 데이터를 다루기 최적화된 구조의 neural network인 것이다.
+
+LSTM은 이러한 RNN의 특별한 한 종류이다. 기존의 RNN은 현재 시점의 무언가를 얻기 위하여 최근의 정보만을 필요로 하는, 즉 필요한 정보를 얻기 휘한 시간 격차가 크지 않을 때는 문제가 일어나지 않는다. 그러나 더 많은 문맥을 필요로 하여 시간 격차가 커지는 경우에 RNN은 학습하는 정보를 계속 이어나가기 어려워한다는 문제가 있다. 이에 LSTM은 명시적으로 설계되어 긴 의존 기간의 문제를 피할 수 있도록 하였다.
+
+이처럼 neural network와 RNN의 문제들을 보완하기 위해 만들어진 LSTM이기에 우리 조는 이러한 LSTM을 사용해 예측 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 할 것이다.
+
+###### Supervised Learning Metodology: light GBM
+
+Gradient Boosting은 “Gradient”라는 개념을 이용하여 이전 모델의 약점을 보완하는 새로운 모델을 순차적으로 만든 뒤 이를 선형 결합하여 얻어낸 모델을 생성하는 지도 학습 알고리즘이다.
+
+이때 Gradient”는 residual fitting과 일맥상통한 개념으로 실제로 residual fitting은 예측값의 residual(잔차)를 줄여나가며 정확도를 높여가는 방식인데 gradient 역시 일종의 residual로 Gradient Boosting에서는 negative gradient를 이용하여 다음 모델을 순차적으로 만들어 나간다.
+
+만약이전 모델이 실제값을 정확하게 예측하지 못하는 약점을 가지게 되는 상황이라면 Gradient boosting은 실제값과 예측값의 차이를 줄여주는 함수를 찾는다. 이러한 함수들을 기존 함수에 선형적으로 더하여 예측값의 오차를 줄이는 방식이 바로 Gradient Boosting이다.
+
+이 중 우리 모델에 사용된 Light GBM은 XGBoost에 비해 훈련 시간이 짧고 성능도 좋아 부스팅 알고리즘에서 가장 많은 주목을 받고 있는 알고리즘으로 Gradient Boosting을 발전시킨 것이 XGBoost, 여기서 속도를 더 높인 것이 LightGBM이다.
+
+LightGBM은 트리 기준 분할이 아닌 리프 기준 분할 방식을 사용한다. 트리의 균형을 맞추지 않고 최대 손실 값을 갖는 리프 노드를 지속적으로 분할하면서 깊고 비대칭적인 트리를 생성한다. 이렇게 하면 트리 기준 분할 방식에 비해 예측 오류 손실을 최소화할 수 있다.
+
+###### Strategy
+
+이번 지도학습의 목표는 <Regression 작업> 메시지의 toxic level을 예측할 수 있는 모델을 구축하는 것이다. 전략은 다음과 같다.
+
+1. Feature engineering: 메시지와 toxic score를 추출하여 학습에 필요한 feature로 사용한다. 이후 데이터를 3:1의 비율로 학습 데이터와 테스트 데이터로 분할한다. 즉 75%와 25%인 것이다.
+
+2. LSTM 모델을 사용한 regression 모델 구축: regression 수행하고 모델을 평가한다. 이후 모델의 결과를 시각화한다.
+
+3. LightGBM을 사용한 regression 모델 구축: LSTM과 마찬가지로 regression 수행하고 모델을 평가한다. 이후 모델의 결과를 시각화한다.
+
+4. 두 모델의 결과를 분석 및 비교한다.
+
+#### ii) Code Explanation
+
+###### 1. Feature Engineering
+
+**Ⅰ. 값 정리**
+
+```R
+processed_df <- na.omit(processed_df)
+processed_df <- processed_df[processed_df$toxic_score != 0, ]
+```
+
+빈 값이 있거나 Toxic score가 0인 행을 제거한다. 이로 인해 약 30만개였던 행의 수가 약 20만개로 줄어 데이터 처리가 수월해진다.
+
+**Ⅱ. LSTM을 위한 텍스트 전처리**
+
+```R
+tokenizer <- text_tokenizer()
+
+fit_text_tokenizer(tokenizer, processed_df$message)
+```
+
+LSTM을 위한 텍스트 전처리가 선행되어야한다.
+우선 텍스트 tokenizer를 생성한다. 이것이 텍스트 데이터를 신경망에 공급할 수 있는 형식으로 변환해줄 것이다.
+그 이후 'processed_df' 데이터프레임의 메시지에 대해 텍스트 tokenizer를 학습한다.
+
+**Ⅲ. 정수 시퀀스 변환**
+
+```R
+sequences <- texts_to_sequences(tokenizer, processed_df$message)
+
+X <- pad_sequences(sequences, maxlen = 50L)
+
+set.seed(sample(100:1000,1,replace=F))
+sample_index <- sample(1:nrow(processed_df), 0.8 * nrow(processed_df))
+train_data <- X[sample_index, ]
+test_data <- X[-sample_index, ]
+train_labels <- processed_df$toxic_score[sample_index]
+test_labels <- processed_df$toxic_score[-sample_index]
+```
+
+피팅된 tokenizer를 사용하여 텍스트 메시지를 정수 시퀀스로 변환합니다. 이후 시퀀스를 균일한 길이로 패딩한다. 이때 최대 길이는 50 token으로 정하였는데, 이는 텍스트 메세지의 최대 길이가 48이었기 때문이다.
+전략에서 말했듯이 데이터를 학습데이터와 테스트 데이터로 랜덤하게 분할한다. 비율은 학습데이터가 75%, 테스트 데이터가 25%이다.
+
+###### 2.LSTM 모델을 사용한 regression 모델 구축
+
+**Ⅰ. LSTM 모델 만들기**
+
+```R
+model <- keras_model_sequential()
+```
+
+시퀀셜 모델을 만든다.
+이후 정수 시퀀스를 밀집 벡터로 변환하는 임베딩 레이어를 추가한다. 각 용어들의 설명은 다음과 같다.
+
+- 1. 'input_dim'은 어휘 크기 (토크나이저의 출력)이다.
+- 2. 'output_dim'은 밀집 임베딩의 차원이다.
+- 3. 'input_length'는 입력 시퀀스의 길이로, 50 토큰으로 패딩됐다.
+
+**Ⅱ. 메세지 고유 단어 추출**
+
+```R
+unique_words <- unique(unlist(strsplit(tolower(processed_df$message), " ")))
+
+vocabulary_size <- length(unique_words)
+embedding_dim <- round(sqrt(vocabulary_size))
+```
+
+각 메시지에서 고유한 단어를 추출한다. 어휘 크기는 input dim 값이고, outd의 크기는 어휘 크기의 제곱근으로 설정하였다.
+
+**Ⅲ. 임베딜 레이어 추가**
+
+```R
+model %>%
+  layer_embedding(input_dim = vocabulary_size, output_dim = embedding_dim, input_length = 50L) %>%
+  layer_lstm(units = 100) %>%
+  layer_dense(units = 1)
+```
+
+계산된 어휘 크기와 임베딩 크기를 기반으로 임베딩 레이어 추가한다.
+
+**Ⅳ. 모델 컴파일**
+
+```R
+model %>% compile(
+  optimizer = 'adam', # Adam Optimizer
+  loss = 'mean_squared_error',  # Mean Squared Error loss for regression
+  metrics = c('mean_absolute_error') # Mean Absolute Error as an additional metric
+)
+```
+
+Adam optimizer, regression을 위한 평균 제곱 오차 손실, 추가적인 메트릭으로 평균 절대 오차 값을 활용하여 모델을 컴파일한다.
+
+**Ⅴ. 모델학습**
+
+```R
+lstm_start_time <- Sys.time()
+
+history <- model %>% fit(
+  train_data, train_labels,
+  epochs = 10, batch_size = 32,
+  validation_split = 0.2
+)
+
+lstm_end_time <- Sys.time()
+
+lstm_elapsed_time <- lstm_end_time - lstm_start_time
+cat("Training Time (LSTM): ", lstm_elapsed_time, "\n")
+```
+
+모델을 학습시키고 이 과정에서 학습 시작 시간과 종료 시간을 체크한다. 이후 경과 시간을 평가한다.
+
+**Ⅵ. 모델 평가 및 시각화**
+
+```R
+model %>% evaluate(test_data, test_labels)
+
+plot(history$metrics$loss, type = "l", col = "blue", xlab = "Epoch", ylab = "Loss", main = "Training and Validation Loss")
+lines(history$metrics$val_loss, col = "red")
+legend("topright", legend = c("Training Loss", "Validation Loss"), col = c("blue", "red"), lty = 1:1)
+```
+
+모델을 평가하고 training loss와 validation loss를 시각화한다.
+
+###### 3. LightGBM을 사용한 regression 모델 구축
+
+**Ⅰ. 학습 준비**
+
+```R
+lgb_data <- lgb.Dataset(train_data, label = train_labels)
+
+lgb_params <- list(
+  objective = "regression",  # Use "regression" for regression tasks
+  metric = "rmse",  # Root Mean Squared Error as the evaluation metric
+  num_iterations = 100 # Number of iteration are going to apply.
+)
+```
+
+Rgression을 위한 LightGBM 모델을 만든다. 학습 데이터에 LightGBM 데이터셋을 넣고, regression 목표 및 평가 메트릭을 포함하여 LightGBM 매개변수를 설정한다.
+
+**Ⅱ. 모델학습**
+
+```R
+lgb_start_time <- Sys.time()
+
+lgb_model <- lgb.train(params = lgb_params, data = lgb_data, verbose = 1)
+
+lgb_end_time <- Sys.time()
+
+lgb_elapsed_time <- lgb_end_time - lgb_start_time
+cat("Training Time (LSTM): ", lgb_elapsed_time, "\n")
+```
+
+LSTM 때와 마찬가지로 모델을 학습시키고 이 과정에서 학습 시작 시간과 종료 시간을 체크한다. 이후 경과 시간을 평가한다.
+
+**Ⅲ. 테스트 셋 예측과 모델 평가**
+
+```R
+predictions <- predict(lgb_model, test_data)
+
+mse <- mean((predictions - test_labels)^2)
+rmse <- sqrt(mse)
+cat("Root Mean Squared Error (RMSE):", rmse, "\n")
+```
+
+테스트 세트를 예상한다. 그리고 RMSE (Root Mean Squared Error)를 계산한다.
+
+###### 4. Visualization
+
+```R
+residuals <- predictions - test_labels
+
+qqnorm(residuals)
+
+qqline(residuals, col = "red")
+```
+
+오차가 계산되고 Q-Q plot을 통해 시각화된다.
+
+#### iii) Result Evaluation and Analysis
+
+###### 1. Result: LSTM
+
+**1. LSTM: Training and Validation Loss Graph**
+![LSTM_Graphical Result](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/977e0eb3-00ed-40a7-a3ea-c6cc0d2cd839)
+
+- Epoch별 training의 결과를 나타낸 그래프이다.
+  - 상단의 그래프는 loss (훈련 손실값), val_loss (validation loss; 예측 손실값)을 각 Epoch 별로 나타낸 것이다.
+  - 하단의 그래프는 MAE (훈련 평균 손실 절대값), validation MAE (예측 평균 손실 절대값)을 각 Epoch 별로 나타낸 것이다.
+- Epoch가 지날수록, 훈련의 손실값은 줄어들고, 예측 손실값은 늘어나는 것이 확인이 된다.
+
+![LSTM-Training and Validation Loss](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/3e4e990e-4511-4955-8d69-b49bb5d2c72a)
+
+- 위 그림은 지도학습에 사용된 LSTM 모델의 training loss와 validation loss 값을 따로 나타낸 그래프이다. 우리 모델의 training loss는 epoch가 증가함에 따라 감소하지만, validation loss는 전반적으로 증가하는 양상을 보인다.
+
+- 이러한 결과가 도출된 원인은 모델이 training dataset과 validation dataset의 차이가 크게 존재해 epoch 초기부터 overfitting 되었을 가능성이 있다. 이러한 문제를 해결하기 위해서는 추가로 전처리를 하거나, 낮은 epoch 값부터 집중적으로 확인하여 generalization을 추가로 진행함으로써 validation loss 값을 최소화할 수 있을 것으로 예상된다.
+
+- 그러나 동시에, overfitting이 발생하였다는 것은 모델의 수용능력이 데이터의 복잡한 관계를 학습하기에 충분하다고도 해석할 수 있고, overfitting 여부를 확인할 수 있었기 때문에 이를 방지하는 방향으로 모델을 개선해 나갈 수 있다.
+
+**2. LightGBM: Q-Q Plot**
+![LightGBM: QQPlot](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/57d32da5-6ed6-4c59-ba9e-e3788e62bb4a)
+
+- 위 그림은 Light GBM 모델의 Q-Q plot이다. 해당 plot을 보면 기준선을 기준으로 양쪽, 위 아래로 전반적으로 대칭을 이루고 있고, 중심부에 점들이 집중적으로 분표한다. 하지만 양끝 값으로 갈수록 기준선으로부터 멀어지고 꼬리 값이 더 두꺼운 분포를 보인다.
+
+<p align="center">
+<img width="516" alt="q-q" src="https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/6bef0e79-1ee2-49ff-9d0b-77ca88b5a7fb">
+</p>
+
+- 위 그림 속 plot 중 우리 모델에 가장 가까운 것은 **heavy-tailed**이다. 이는 Light GBM 모델을 통해 평가했을 때 Theoretical Quantile이 Sample Quantile보다 작다는 것을 의미한다.
+- 이를 정리하면, 모델의 분포에 비정규성이 존재하며 이는 regression 모델에 오차가 존재할 수 있음을 나타낸다.
+
+#### iv) Full Code
+
+```R
+# AI-X Final Project
+# Supervised Learning after doing unsupervised learning.
+# Part 1: Regressing Toxic Score of Chatting
+
+# Dataset: A chatlog with toxic score assessed by unsupervised learning.
+# Column: X(id), Message, Most common report reason, Toxic Score
+
+library(keras) # R Package: LSTM Model
+library(caret) # R Package:
+library(tensorflow) # R Package: Tensorflow
+library(reticulate) # R Package for interfacing with python
+library(lightgbm) # R PAckage: LightGBM
+
+setwd("~/Desktop/Dev/HYU/2023-02/AI-X/project/gamechatban") # Change this value to your working dir.
+
+reticulate::py_config() # Show python interpreter currently configured to use.
+
+# Read a dataset for supervised learning.
+processed_df <- read.csv('./offender_chatlog_with_toxic_score.csv')
+
+# Objective: [Regression Task]: Build a model that can predict the toxic level of message.
+# Strategy
+# 1. Feature Engineering
+  # Extract message and toxic score, which are the features required for learning.
+  # Split data into training data and test data (75% : 25%)
+# 2. Build a regression model using LSTM Model
+  # Make regression and evaluate the model.
+  # Plot the model result.
+# 3. Build a regression model using LightGBM.
+  # Make regression and evaluate the model.
+  # Plot the model result.
+# 4. Analyze & Compare the result of two models,
+
+# 1-1 Feature Engineering
+# Remove the missing values
+processed_df <- na.omit(processed_df)
+# Remove rows where toxic_score is equal to 0
+processed_df <- processed_df[processed_df$toxic_score != 0, ]
+
+# Preprocess the text data for LSTM
+# Create a text tokenizer; convert text data into a format that can be fed into a neural network.
+tokenizer <- text_tokenizer()
+
+# Fit the text tokenizer on the messages in the 'processed_df' dataframe
+# Learns the vocabulary of the corpus and assigns a unique integer index to each word.
+fit_text_tokenizer(tokenizer, processed_df$message)
+
+# Convert the text messages to sequences of integers using the fitted tokenizer
+# Each word in the messages is replaced with its corresponding integer index.
+sequences <- texts_to_sequences(tokenizer, processed_df$message)
+
+# Pad the sequences to ensure uniform length (Maximum length of 50 tokens)
+X <- pad_sequences(sequences, maxlen = 50L)  # The maximum length of message is 48.
+
+# Split the data into training and testing sets
+set.seed(sample(100:1000,1,replace=F)) # Random sampling
+sample_index <- sample(1:nrow(processed_df), 0.8 * nrow(processed_df))
+train_data <- X[sample_index, ]
+test_data <- X[-sample_index, ]
+train_labels <- processed_df$toxic_score[sample_index]
+test_labels <- processed_df$toxic_score[-sample_index]
+
+# Build the LSTM model
+# Create a sequential model
+model <- keras_model_sequential()
+
+# Add an embedding layer to convert integer sequences to dense vectors
+  # 'input_dim' is the size of the vocabulary (output of the tokenizer)
+  # 'output_dim' is the dimension of the dense embedding
+  # 'input_length' is the length of the input sequences (padded to 50 tokens)
+
+unique_words <- unique(unlist(strsplit(tolower(processed_df$message), " "))) # Unique words of each message.
+
+vocabulary_size <- length(unique_words) # Size of vocab. Will be a value of input_dim.
+embedding_dim <- round(sqrt(vocabulary_size)) # Size of output, Will be a root(sqrt) of vocab size,
+
+# Adding embedding layer based on the calcualted vocab size and embedding size.
+model %>%
+  layer_embedding(input_dim = vocabulary_size, output_dim = embedding_dim, input_length = 50L) %>%
+  layer_lstm(units = 100) %>%
+  layer_dense(units = 1)
+
+# Compile the model
+model %>% compile(
+  optimizer = 'adam', # Adam Optimizer
+  loss = 'mean_squared_error',  # Mean Squared Error loss for regression
+  metrics = c('mean_absolute_error') # Mean Absolute Error as an additional metric
+)
+
+# Train the model
+# Check starting time
+lstm_start_time <- Sys.time()
+
+# Start Training
+history <- model %>% fit(
+  train_data, train_labels,
+  epochs = 10, batch_size = 32,
+  validation_split = 0.2
+)
+
+# Check ending time
+lstm_end_time <- Sys.time()
+
+# Calcualte Elapsed time;
+lstm_elapsed_time <- lstm_end_time - lstm_start_time
+cat("Training Time (LSTM): ", lstm_elapsed_time, "\n")
+
+# Evaluate the model
+model %>% evaluate(test_data, test_labels)
+
+# Visualization: Line Plot of Training and Validation Loss
+plot(history$metrics$loss, type = "l", col = "blue", xlab = "Epoch", ylab = "Loss", main = "Training and Validation Loss")
+lines(history$metrics$val_loss, col = "red")
+legend("topright", legend = c("Training Loss", "Validation Loss"), col = c("blue", "red"), lty = 1:1)
+
+# 1-3: Build a regression model using LightGBM (Gradient Boosting Model)
+
+# LightGBM Model for Regression
+lgb_data <- lgb.Dataset(train_data, label = train_labels)
+
+# Set LightGBM parameters
+lgb_params <- list(
+  objective = "regression",  # Use "regression" for regression tasks
+  metric = "rmse",  # Root Mean Squared Error as the evaluation metric
+  num_iterations = 100 # Number of iteration are going to apply.
+)
+
+# Train the model
+# Check starting time
+lgb_start_time <- Sys.time()
+
+# Start Training
+lgb_model <- lgb.train(params = lgb_params, data = lgb_data, verbose = 1)
+
+# Check ending time
+lgb_end_time <- Sys.time()
+
+# Calcualte Elapsed time;
+lgb_elapsed_time <- lgb_end_time - lgb_start_time
+cat("Training Time (LSTM): ", lgb_elapsed_time, "\n")
+
+# Make predictions on the test set
+predictions <- predict(lgb_model, test_data)
+
+# Evaluate the model (RMSE)
+mse <- mean((predictions - test_labels)^2)
+rmse <- sqrt(mse)
+cat("Root Mean Squared Error (RMSE):", rmse, "\n")
+
+## Visualization
+# Calculate residuals
+residuals <- predictions - test_labels
+
+# Q-Q (Quantile-Quantile) Plot of Residuals
+# Q-Q plots are used to assess whether a set of data follows a particular theoretical distribution, such as a normal distribution.
+# In this context, the plot compares the quantiles of the residuals against the quantiles of a standard normal distribution. (norm)
+# If the points on the plot closely follow the reference line, it suggests that the residuals are approximately normally distributed.
+# Deviations from the line may indicate non-normality.(Potential issues exists with the assumptions of the regression model)
+qqnorm(residuals)
+#Add a straight line, which passes first and third quatiles of the data, for a reference line to the Q-Q plot.
+qqline(residuals, col = "red")
+```
 
 ---
 
