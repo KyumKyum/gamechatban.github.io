@@ -16,19 +16,33 @@
 **IV. Project Strategy**
 
 1. Unspervised Learning
+
    i) Learning Strategy
+
    ii) Code Explanation
+
    iii) Result Evaluation and Analysis
+
    iv) Full Code
+
 2. Spervised Learning (Regression)
+
    i) Learning Strategy
+
    ii) Code Explanation
+
    iii) Result Evaluation and Analysis
+
    iv) Full Code
+
 3. Spervised Learning (Classification)
+
    i) Learning Strategy
+
    ii) Code Explanation
+
    iii) Result Evaluation and Analysis
+
    iv) Full Code
 
 **V. Evaluation & Analysis**
@@ -359,7 +373,7 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 
 ###### 2. Result Analysis
 
-**1. Scatter Plot (Case of Report and Severity)**
+**1. Scatter Plot: Case of Report and Severity**
 ![TF_IDF  Scatter Plot](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/4ba98d24-b777-44d7-9cec-1fa05b4a8c06)
 
 - 위 그림은 TF-IDF 모델의 toxic score와 해당 유저의 신고 당한 횟수를 나타낸 것이다. 그래프는 toxic score이 높은 채팅일수록 적은 신고 횟수를 나타낸다.
