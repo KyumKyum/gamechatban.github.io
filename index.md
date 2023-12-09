@@ -45,9 +45,9 @@
 
    iv) Full Code
 
-**V. Evaluation & Analysis**
+**V. Video Link**
 
-**VI. Conclusion: Discussion**
+**VI. Conclusion**
 
 **VII. Related Works**
 
@@ -69,7 +69,8 @@
 
 [^2]: League of Legends 고객지원 신고 - 제재 및 이용 제한 - 게임 내 이용 제한 알아보기
 
-하지만 정작 어떤 기준에 의해서, 어떤 말을 했을 때 처벌이 이루어지는지는 알려진 바가 거의 없다. 이로 인해 억울하게 처벌 받는 유저나 명백히 부적절한 언행을 한 유저를 신고했음에도 해당 유저에 대한 처벌이 이루어지지 않거나 이루어져도 알 방법이 없는 상황이다.
+하지만 정작 어떤 기준에 의해서, 어떤 말을 했을 때 처벌이 이루어지는지는 알려진 바가 거의 없다. 이로 인해 억울하게 처벌 받는 유저나 명백히 부적절한 언행을 한 유저를 신고했음에도 해당 유저에 대한 처벌이 이루어지지 않거나 이루어져도 알 방법이 없는 상황이다. [^3]
+[^3]: 조현덕·이정서 기자, "모니터 속 무법지대를 처벌하려면", 중대신문, 2022.12.05, https://news.cauon.net/news/articleView.html?idxno=37564
 
 따라서, 이러한 게임 내 부적절한 채팅을 확인하고 유저 스스로 채팅의 부적절성을 판단하는 것을 도움으로써 향후 보다 건전한 게임 채팅 문화에 기여하고자 이 프로젝트를 진행하였다. 우리 조는 리그오브레전드(League of Legends)라는 전 세계적으로 유행하는 AOS 장르 게임의 채팅 신고 내역을 활용하여 해당 채팅이 타 유저로 하여금 얼마나 불쾌하게 만드는지 비지도학습과 지도학습을 활용하여 정량화하고 이를 면밀히 분석하고자 한다.
 
@@ -108,9 +109,10 @@ B. 신고 사유 분류 모델
 
 # III. Dataset
 
-리그오브레전드(League of Legends)에서 report당한 채팅들에 관한 데이터셋이다. contents는 다음과 같다. (출처: Kaggle[^3])
+리그오브레전드(League of Legends)에서 report당한 채팅들에 관한 데이터셋이다. 약 160만개의 영문 채팅 기록을 가지고 있는 dataset이며, 다음과 같은 항목을 가지고 있다. (출처: Kaggle[^4])
+[^4]: https://www.kaggle.com/datasets/simshengxue/league-of-legends-tribunal-chatlogs
 
-[^3]: https://www.kaggle.com/datasets/simshengxue/league-of-legends-tribunal-chatlogs
+![raw](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/09ec0c53-1ca5-4190-a23f-8b9c0539085b)
 
 - message: 신고당한 메세지 내용
 
@@ -148,7 +150,10 @@ B. 신고 사유 분류 모델
 
 ### **1. Unspervised Learning**
 
-비지도 학습(Unspervised Learning)은 기계학습의 일종이다. 데이터가 어떻게 구성되었는지를 알아내는 문제의 범주에 속하며 입력값에 대한 목표치가 주어지지 않는다.
+비지도 학습(Unsupervised Learning)은 기계학습의 주요 분야 중 하나로, 데이터의 내재된 구조와 패턴을 파악하는 데 중점을 둔다. 이러한 학습 방식은 특별한 목표값이나 라벨이 주어지지 않은 상태에서 입력 데이터의 특성을 탐색하고 해석하는데 사용된다. 지도학습과 대조되는 비지도 학습에서는 사전에 정의된 라벨이나 목표값이 필요하지 않으며, 대신 시스템은 데이터셋 내부의 숨겨진 구조나 관계를 발견하는 것에 중점을 둔다. 이러한 특징은 비지도 학습을 탐험적이고 데이터 중심적인 기술로 만들어, 기존의 패턴이 명확하지 않거나 인간이 라벨을 만드는 데 제한적이거나 비용이 많이 드는 상황에서 특히 효과적으로 사용된다.
+
+비지도 학습의 핵심은 라벨이 지정되지 않은 데이터에서 의미 있는 통찰력을 추출하는 것으로, 다양한 도메인에서의 응용 가능성을 열어놓고 있다. Clustering은 두드러진 비지도 학습 기술 중 하나로, 비슷한 데이터 포인트를 기반으로 함께 그룹화하여 데이터 내부의 구조나 자연스러운 그룹을 드러내는 것을 목표로 한다.[^5] 차원 축소 기술은 또 다른 비지도 학습의 측면으로, 데이터의 본질적인 특성을 추출하면서 중복되거나 노이즈가 많은 정보를 제거하는 것을 목표로 한다. 비지도 학습 알고리즘은 계층적 클러스터링부터 오토인코더 및 생성적 적대 신경망까지 다양하며, 머신러닝 전문가들에게는 라벨이 없는 데이터로부터 가치 있는 지식을 얻어내어 주어진 정보의 본질적인 복잡성에 대한 깊은 이해를 촉진한다.
+[^5]: Roman, Victor, Unsupervised Machine Learning: Clustering Analysis, Medium, 2019.03.07,https://towardsdatascience.com/unsupervised-machine-learning-clustering-analysis-d40f2b34ae7e
 
 #### i. Learning Strategy
 
@@ -541,9 +546,13 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 
 ### **2. Spervised Learning (Regression)**
 
-지도 학습(Supervised Learning)은 비지도 학습과는 다르게 예를 통해 학습하도록 설계된다. 관여자인 인간은 문제에 대한 답을 이미 알고 있는 것이다. 인공지능이 이를 알아낼 때 까지 훈련시키고자 할 때 사용한다.
+지도 학습(Supervised Learning)은 기계학습의 중요한 카테고리 중 하나로, 예시를 통해 학습하는 구조를 가지고 있다. 이 방식은 비지도 학습과는 대조적으로 학습을 위한 입력과 그에 대응하는 목표값(라벨)이 함께 제공된다. 이것은 관여자 또는 인간이 이미 문제에 대한 정답을 알고 있는 상황에서 사용된다. 인공지능 시스템은 주어진 입력 데이터를 기반으로 예측을 수행하고, 실제 목표값과 비교하여 오차를 최소화하도록 훈련된다. 이는 시스템이 주어진 작업에서 최적의 예측을 수행할 수 있도록 학습하는 데에 중점을 둔다. [^6]
+[^6]: Jorge Leonel, Supervised Learning, Medium, 2018.06.03, https://medium.com/@jorgesleonel/supervised-learning-c16823b00c13
 
-**_\_TODO: Regression, 목적에 대한 설명 글 적기_**
+지도 학습은 다양한 응용 분야에서 활용되며, 특히 분류(Classification)와 회귀(Regression) 작업에서 효과적으로 활용된다. 분류 작업에서는 입력 데이터를 미리 정의된 클래스 중 하나로 할당하고, 회귀 작업에서는 연속적인 값을 예측하는 데 사용된다. 예를 들어, 이메일이 스팸인지 아닌지를 분류하거나 주택 가격을 예측하는 등 다양한 예측 작업에 지도 학습이 적용된다. [^7]
+[^7]: Curtis Savage, What is Supervised Learning?, Medium, 2022.12.17, https://medium.com/ai-for-product-people/what-is-supervised-learning-fa8e2276893e
+
+먼저, 분류 작업과 회귀 작업 중 회귀 작업을 우선으로 진행할 것이다. 지도학습 중 회귀를 통해 우리 조의 목적이었던 toxic level을 예측할 수 있도록 할 것이다. 모델은 LSTM과 light GBM을 사용한다. 이 두 가지 모델을 이용해서 기존의 데이터셋을 학습시키고, 메시지의 toxic level을 예측할 수 있도록 할 것이다.
 
 #### i) Learning Strategy
 
@@ -790,8 +799,9 @@ qqline(residuals, col = "red")
 <img width="516" alt="q-q" src="https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/6bef0e79-1ee2-49ff-9d0b-77ca88b5a7fb">
 </p>
 
-- 위 그림 속 plot 중 우리 모델에 가장 가까운 것은 **heavy-tailed**이다. 이는 Light GBM 모델을 통해 평가했을 때 Theoretical Quantile이 Sample Quantile보다 작다는 것을 의미한다.
+- 위 그림[^8] 속 plot 중 우리 모델에 가장 가까운 것은 **heavy-tailed**이다. 이는 Light GBM 모델을 통해 평가했을 때 Theoretical Quantile이 Sample Quantile보다 작다는 것을 의미한다.
 - 이를 정리하면, 모델의 분포에 비정규성이 존재하며 이는 regression 모델에 오차가 존재할 수 있음을 나타낸다.
+  [^8]: yuns_u, QQ Plot 해석하기, Velog, https://velog.io/@yuns_u/QQ-plot-%ED%95%B4%EC%84%9D%ED%95%98%EA%B8%B0
 
 #### iv) Full Code
 
@@ -961,7 +971,7 @@ qqline(residuals, col = "red")
 
 ### **3. Spervised Learning (Classification)**
 
-**_TODO: 간단한 Introduction! (저희가 classification을 왜 하는지에 대한 1~2문단!)_**
+이제 남은 분류 작업을 진행할 차례이다. 이번에는 toxic level을 예측하는 것 말고도 이 메시지가 어떤 'most_common_report_reason'에 속하는지 예측하는 것도 우리 조의 목적이었다. 이를 위해 지도학습 중 분류를 진행할 것이다. 모델은 Random Forest를 사용한다. 이 모델을 이용하여 기존의 데이터셋을 학습시키고, 메시지가 'most_common_report_reason' 중 어디에 속하는지를 예측할 수 있도록 할 것이다.
 
 #### i) Learning Strategy
 
@@ -1226,22 +1236,47 @@ plot(roc_curve, col = "blue", main = "ROC Curve for Random Forest",
 
 ---
 
-# V. Evaluation & Analysis
+# V. Video Link
+
+<div position="relative", align="center">
+    <iframe width="640" height="390" 
+    src="https://www.youtube.com/embed/2JzGY2u0wz8" 
+    frameborder="0" allowfullscreen></iframe>
+</div>
 
 ---
 
 # VI. Conclusion: Discussion
 
+비지도 학습을 통해 toxic level이 높은 단어는 단순한 단어보다 길고 상세한 말뭉치라는 것을 깨달을 수 있었다. TF-IDF 결과를 토대로 나온 용어들을 보며 사람들이 불쾌함을 느낄 수 있는 말들을 배울 수 있었으며, 특히 그 언어 자체의 공격성보다는 빈도와 분량이 많을수록 더욱 불쾌함을 느꼈다는 것을 알 수 있었다.
+
+지도학습에서는 모델에 대해서 알 수 있었다. LSTM의 training loss가 epoch의 증가에 따라 감소했다는 것은 학습을 많이 할수록 loss값을 줄일 수 있다는 것을 배울 수 있다. Light GBM에서는 Q-Q plot을 보며 regression 모델의 오차 가능성을 볼 수 있었다.
+
+Random Forest에 대해서는 사유마다 예측 일치 비율이 다르다는 것을 heat map을 통해 직관적으로 알 수 있었다. 또한 ROC curve를 통해 그래프가 참조선 위에서는 그려졌다는 것을 알 수 있었다. 그러나 정확도가 30% 중반 수준에 머무른 것은 아쉬움으로 남는다. 추후에 프로젝트를 진행한다면 이보다 정확도를 높이는 방향으로 나아가야 할 것이다.
+
+게임 내의 부적절한 채팅 목록을 비지도 학습의 결과물을 보며 배우며 유저 스스로가 채팅의 부적절성을 판단할 수 있다. 게임 내에서 사용하기 부적절한 단어는 일상생활에서도 사용해서는 안 되는 단어들이다. 이런 단어들에 대하여 경각심을 가지고 건전한 언어 습관을 만들어야 할 것이다.
+
+또한 우리 조의 지도 학습 프로그램을 통해 게임 업계에서 부적절한 채팅을 감지하고 그런 채팅을 막는데 도움을 줄 수 있다. 프로그램의 사용으로 보다 깨끗한 채팅 문화를 이끌어 갈 수 있기를 희망한다.
+
+해당 프로젝트에 사용된 코드는 해당 [Github Repository](https://github.com/KyumKyum/gamechatban_deep_learning_proj)에 open으로 공개를 해두었다.
+
 ---
 
 # VI. Related Works
 
-Rajaraman, A.; Ullman, J.D, Mining of Massive Datasets, Data Mining, 2011, 1-17,
-Akiko Aizawa, An information-theoretic perspective of tf–idf measures, National Institute of Informatics, January 2003,
-Manning, C. D.; Raghavan, P.; Schutze, H, 《Introduction to Information Retrieval》, Cambridge University Press, 1983, 100-123,
+1. 이준명, 나정환, 도영임, 플레이어의 개인 성향과 게임 내의 트롤링 행위의 관계, 한국게임학회 논문지,2016,
 
-"Introducing dplyr", blog.rstudio.com, Retrieved 2023-11-24,
+2. Rajaraman, A. Ullman, J.D, Mining of Massive Datasets, Data Mining, 2011, 1-17,
+   Akiko Aizawa, An information-theoretic perspective of tf–idf measures, National Institute of Informatics, January 2003,
 
-FEINERER, Ingo. Introduction to the tm Package Text Mining in R. Accessible en ligne: http://cran. r-project. org/web/packages/tm/vignettes/tm. pdf, 2023, 1
+3. Manning, C. D. Raghavan, P. Schutze, 《Introduction to Information Retrieval》, Cambridge University Press, 1983, 100-123,
 
----
+4. "Introducing dplyr", blog.rstudio.com, Retrieved 2023-11-24,
+
+5. FEINERER, Ingo. Introduction to the tm Package Text Mining in R. Accessible en ligne: http://cran. r-project. org/web/packages/tm/vignettes/tm. pdf, 2023, 1
+
+6. Manning, C.D., Raghavan, P. Schutze, et. al, "Scoring, term weighting, and the vector space model", Introduction to Information Retrieval.
+
+7. Christopher M. Bishop, "Pattern Recognition and Machine Learning", 2006
+
+8. Pedro Domingos, "A Few Useful Things to Know About Machine Learning", 2012
