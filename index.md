@@ -70,6 +70,7 @@
 [^2]: League of Legends 고객지원 신고 - 제재 및 이용 제한 - 게임 내 이용 제한 알아보기
 
 하지만 정작 어떤 기준에 의해서, 어떤 말을 했을 때 처벌이 이루어지는지는 알려진 바가 거의 없다. 이로 인해 억울하게 처벌 받는 유저나 명백히 부적절한 언행을 한 유저를 신고했음에도 해당 유저에 대한 처벌이 이루어지지 않거나 이루어져도 알 방법이 없는 상황이다. [^3]
+
 [^3]: 조현덕·이정서 기자, "모니터 속 무법지대를 처벌하려면", 중대신문, 2022.12.05, https://news.cauon.net/news/articleView.html?idxno=37564
 
 따라서, 이러한 게임 내 부적절한 채팅을 확인하고 유저 스스로 채팅의 부적절성을 판단하는 것을 도움으로써 향후 보다 건전한 게임 채팅 문화에 기여하고자 이 프로젝트를 진행하였다. 우리 조는 리그오브레전드(League of Legends)라는 전 세계적으로 유행하는 AOS 장르 게임의 채팅 신고 내역을 활용하여 해당 채팅이 타 유저로 하여금 얼마나 불쾌하게 만드는지 비지도학습과 지도학습을 활용하여 정량화하고 이를 면밀히 분석하고자 한다.
@@ -110,6 +111,7 @@ B. 신고 사유 분류 모델
 # III. Dataset
 
 리그오브레전드(League of Legends)에서 report당한 채팅들에 관한 데이터셋이다. 약 160만개의 영문 채팅 기록을 가지고 있는 dataset이며, 다음과 같은 항목을 가지고 있다. (출처: Kaggle[^4])
+
 [^4]: https://www.kaggle.com/datasets/simshengxue/league-of-legends-tribunal-chatlogs
 
 ![raw](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/09ec0c53-1ca5-4190-a23f-8b9c0539085b)
@@ -153,6 +155,7 @@ B. 신고 사유 분류 모델
 비지도 학습(Unsupervised Learning)은 기계학습의 주요 분야 중 하나로, 데이터의 내재된 구조와 패턴을 파악하는 데 중점을 둔다. 이러한 학습 방식은 특별한 목표값이나 라벨이 주어지지 않은 상태에서 입력 데이터의 특성을 탐색하고 해석하는데 사용된다. 지도학습과 대조되는 비지도 학습에서는 사전에 정의된 라벨이나 목표값이 필요하지 않으며, 대신 시스템은 데이터셋 내부의 숨겨진 구조나 관계를 발견하는 것에 중점을 둔다. 이러한 특징은 비지도 학습을 탐험적이고 데이터 중심적인 기술로 만들어, 기존의 패턴이 명확하지 않거나 인간이 라벨을 만드는 데 제한적이거나 비용이 많이 드는 상황에서 특히 효과적으로 사용된다.
 
 비지도 학습의 핵심은 라벨이 지정되지 않은 데이터에서 의미 있는 통찰력을 추출하는 것으로, 다양한 도메인에서의 응용 가능성을 열어놓고 있다. Clustering은 두드러진 비지도 학습 기술 중 하나로, 비슷한 데이터 포인트를 기반으로 함께 그룹화하여 데이터 내부의 구조나 자연스러운 그룹을 드러내는 것을 목표로 한다.[^5] 차원 축소 기술은 또 다른 비지도 학습의 측면으로, 데이터의 본질적인 특성을 추출하면서 중복되거나 노이즈가 많은 정보를 제거하는 것을 목표로 한다. 비지도 학습 알고리즘은 계층적 클러스터링부터 오토인코더 및 생성적 적대 신경망까지 다양하며, 머신러닝 전문가들에게는 라벨이 없는 데이터로부터 가치 있는 지식을 얻어내어 주어진 정보의 본질적인 복잡성에 대한 깊은 이해를 촉진한다.
+
 [^5]: Roman, Victor, Unsupervised Machine Learning: Clustering Analysis, Medium, 2019.03.07,https://towardsdatascience.com/unsupervised-machine-learning-clustering-analysis-d40f2b34ae7e
 
 #### i. Learning Strategy
@@ -547,9 +550,11 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 ### **2. Spervised Learning (Regression)**
 
 지도 학습(Supervised Learning)은 기계학습의 중요한 카테고리 중 하나로, 예시를 통해 학습하는 구조를 가지고 있다. 이 방식은 비지도 학습과는 대조적으로 학습을 위한 입력과 그에 대응하는 목표값(라벨)이 함께 제공된다. 이것은 관여자 또는 인간이 이미 문제에 대한 정답을 알고 있는 상황에서 사용된다. 인공지능 시스템은 주어진 입력 데이터를 기반으로 예측을 수행하고, 실제 목표값과 비교하여 오차를 최소화하도록 훈련된다. 이는 시스템이 주어진 작업에서 최적의 예측을 수행할 수 있도록 학습하는 데에 중점을 둔다. [^6]
+
 [^6]: Jorge Leonel, Supervised Learning, Medium, 2018.06.03, https://medium.com/@jorgesleonel/supervised-learning-c16823b00c13
 
 지도 학습은 다양한 응용 분야에서 활용되며, 특히 분류(Classification)와 회귀(Regression) 작업에서 효과적으로 활용된다. 분류 작업에서는 입력 데이터를 미리 정의된 클래스 중 하나로 할당하고, 회귀 작업에서는 연속적인 값을 예측하는 데 사용된다. 예를 들어, 이메일이 스팸인지 아닌지를 분류하거나 주택 가격을 예측하는 등 다양한 예측 작업에 지도 학습이 적용된다. [^7]
+
 [^7]: Curtis Savage, What is Supervised Learning?, Medium, 2022.12.17, https://medium.com/ai-for-product-people/what-is-supervised-learning-fa8e2276893e
 
 먼저, 분류 작업과 회귀 작업 중 회귀 작업을 우선으로 진행할 것이다. 지도학습 중 회귀를 통해 우리 조의 목적이었던 toxic level을 예측할 수 있도록 할 것이다. 모델은 LSTM과 light GBM을 사용한다. 이 두 가지 모델을 이용해서 기존의 데이터셋을 학습시키고, 메시지의 toxic level을 예측할 수 있도록 할 것이다.
@@ -801,7 +806,8 @@ qqline(residuals, col = "red")
 
 - 위 그림[^8] 속 plot 중 우리 모델에 가장 가까운 것은 **heavy-tailed**이다. 이는 Light GBM 모델을 통해 평가했을 때 Theoretical Quantile이 Sample Quantile보다 작다는 것을 의미한다.
 - 이를 정리하면, 모델의 분포에 비정규성이 존재하며 이는 regression 모델에 오차가 존재할 수 있음을 나타낸다.
-  [^8]: yuns_u, QQ Plot 해석하기, Velog, https://velog.io/@yuns_u/QQ-plot-%ED%95%B4%EC%84%9D%ED%95%98%EA%B8%B0
+
+[^8]: yuns_u, QQ Plot 해석하기, Velog, https://velog.io/@yuns_u/QQ-plot-%ED%95%B4%EC%84%9D%ED%95%98%EA%B8%B0
 
 #### iv) Full Code
 
