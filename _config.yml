@@ -22,7 +22,7 @@ subtitle                 : # site tagline that appears below site title in masth
 name                     : "2023 DL Project"
 description              : "2023 DL Project"
 url                      : "https://github.com/KyumKyum/gamechatban.github.io"
-baseurl                  : 
+baseurl                  : "https://github.com/KyumKyum/gamechatban.github.io"
 repository               : "KyumKyum/gamechatban.github.io"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
