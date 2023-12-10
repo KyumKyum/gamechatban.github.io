@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "air" # "air", "aqua", "contrast", "dark", "dirt", "n
 
 # Site Settings
 locale                   : "ko-KR"
-title                    : "Deep Learning Project - Chatting Toxicity Analysis and Possible Report Reason Regression"
+title                    : "Deep Learning Project - Chatting Toxicity Score Analysis via Unsupervised/Supevised Learning"
 title_separator          : "&#124;"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "2023 DL Project"
