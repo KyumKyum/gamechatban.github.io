@@ -619,6 +619,7 @@ LightGBM은 트리 기준 분할이 아닌 리프 기준 분할 방식을 사용
 
 ```R
 library(keras)
+library(caret)
 library(tensorflow)
 library(reticulate)
 library(lightgbm)
@@ -627,6 +628,7 @@ library(lightgbm)
 먼저 필요한 R package를 불러온다. 필요한 패키지는 다음과 같다.
 
 - keras: LSTM Model을 위한 패키지
+- caret: 해당 task에서는 LSTM 결과의 plotting을 위해서 사용이 되었다.
 - tensorflow: LSTM의 학습을 위한 패키지 (Python Package)
 - reticulate: Python과 interfacing을 위한 패키지
 - lightgbm: LightGBM Model을 위한 패키지
@@ -864,6 +866,7 @@ qqline(residuals, col = "red")
 # Column: X(id), Message, Most common report reason, Toxic Score
 
 library(keras) # R Package: LSTM Model
+library(caret) # R Package: Plot
 library(tensorflow) # R Package: Tensorflow
 library(reticulate) # R Package for interfacing with python
 library(lightgbm) # R PAckage: LightGBM
@@ -1196,6 +1199,7 @@ Random Forest에 대한 ROC curve를 생성하고 시각화는 작업을 수행�
 - ROC curve는 일단 그래프 자체가 참조선 위에 그려졌다. 그러나 이론적으로 정확도가 높다고 판별하는 기준인 AUC 값 0.8 보다 높다고 보기는 어렵다.
 - 이는 앞선 confusion matrix의 heat map을 통해서도 확인했듯이 True Positive Rate(TPR)가 높다고 보기 어려웠다. 2개의 신고 사유를 제외하곤 예측 값과 실제 값의 차이가 컸기 때문이다.
 - 이로 인해 TPR을 나타내는 ROC curve의 sensitivity 값의 빠른 증가와 참조선을 상회하는 크기의 그래프의 기울기를 그림에서 찾아볼 수 없었다.
+- 이로써 채팅의 글 자체만으로는 신고 사유를 분석하는 것이 어렵고, 이러한 분석을 위해서는 전체적인 맥락과 전후 채팅, 당시 상황 등의 추가적인 정보가 들어가야 한다고 판단이 되었다.
 
 #### iv) Full Code
 
@@ -1301,7 +1305,7 @@ plot(roc_curve, col = "blue", main = "ROC Curve for Random Forest",
 
 지도학습에서는 모델에 대해서 알 수 있었다. LSTM의 training loss가 epoch의 증가에 따라 감소했다는 것은 학습을 많이 할수록 loss값을 줄일 수 있다는 것을 배울 수 있다. Light GBM에서는 Q-Q plot을 보며 regression 모델의 오차 가능성을 볼 수 있었다.
 
-Random Forest에 대해서는 사유마다 예측 일치 비율이 다르다는 것을 heat map을 통해 직관적으로 알 수 있었다. 또한 ROC curve를 통해 그래프가 참조선 위에서는 그려졌다는 것을 알 수 있었다. 그러나 정확도가 30% 중반 수준에 머무른 것은 아쉬움으로 남는다. 추후에 프로젝트를 진행한다면 이보다 정확도를 높이는 방향으로 나아가야 할 것이다.
+Random Forest에 대해서는 사유마다 예측 일치 비율이 다르다는 것을 heat map을 통해 직관적으로 알 수 있었다. 또한 ROC curve를 통해 그래프가 참조선 위에서는 그려졌다는 것을 알 수 있었다. 그러나 정확도가 30% 중반 수준에 머무른 것은 아쉬움으로 남는다. 단순 채팅 만으로는 신고 사유를 분류하기 어렵고, 더욱 정확한 분류를 위해서는 맥락을 파악할 수 있는 전후 채팅, 각 채팅의 intent 정보 등 채팅의 의도를 파악할 수 있는 정보가 필요하다는 판단을 하였다. 추후에 프로젝트를 진행한다면 이보다 정확도를 높이는 방향으로 나아가야 할 것이다.
 
 게임 내의 부적절한 채팅 목록을 비지도 학습의 결과물을 보며 배우며 유저 스스로가 채팅의 부적절성을 판단할 수 있다. 게임 내에서 사용하기 부적절한 단어는 일상생활에서도 사용해서는 안 되는 단어들이다. 이런 단어들에 대하여 경각심을 가지고 건전한 언어 습관을 만들어야 할 것이다.
 
