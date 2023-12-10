@@ -1,8 +1,10 @@
 # 2023-02 Ai-X Deep Learning Project
 
+###### ㅇ
+
 ---
 
-##### Contents
+# Contents
 
 **I. Proposal**
 
@@ -15,7 +17,7 @@
 
 **IV. Project Strategy**
 
-1. Unspervised Learning
+1. Unsupervised Learning
 
    i) Learning Strategy
 
@@ -25,7 +27,7 @@
 
    iv) Full Code
 
-2. Spervised Learning (Regression)
+2. Supervised Learning (Regression)
 
    i) Learning Strategy
 
@@ -35,7 +37,7 @@
 
    iv) Full Code
 
-3. Spervised Learning (Classification)
+3. Supervised Learning (Classification)
 
    i) Learning Strategy
 
@@ -103,7 +105,7 @@ B. 신고 사유 분류 모델
 # II. Team Memebers
 
 - 생명과학과 2018023427 이승현: 데이터 전처리 전략, 그래프 및 딥러닝 결과 분석
-- 정보시스템학과 2019014266 임규민: 특징 공학 및 코드 작성
+- 정보시스템학과 2019014266 임규민: 딥러닝 및 특징 공학 전략 수립, 코드 작성
 - 정치외교학과 2022094366 장정원: 자료 수집 및 글 작성, 영상 촬영
 
 ---
@@ -150,7 +152,7 @@ B. 신고 사유 분류 모델
 
 # IV. Project Strategy
 
-### **1. Unspervised Learning**
+### **1. Unsupervised Learning**
 
 비지도 학습(Unsupervised Learning)은 기계학습의 주요 분야 중 하나로, 데이터의 내재된 구조와 패턴을 파악하는 데 중점을 둔다. 이러한 학습 방식은 특별한 목표값이나 라벨이 주어지지 않은 상태에서 입력 데이터의 특성을 탐색하고 해석하는데 사용된다. 지도학습과 대조되는 비지도 학습에서는 사전에 정의된 라벨이나 목표값이 필요하지 않으며, 대신 시스템은 데이터셋 내부의 숨겨진 구조나 관계를 발견하는 것에 중점을 둔다. 이러한 특징은 비지도 학습을 탐험적이고 데이터 중심적인 기술로 만들어, 기존의 패턴이 명확하지 않거나 인간이 라벨을 만드는 데 제한적이거나 비용이 많이 드는 상황에서 특히 효과적으로 사용된다.
 
@@ -158,9 +160,9 @@ B. 신고 사유 분류 모델
 
 [^5]: Roman, Victor, Unsupervised Machine Learning: Clustering Analysis, Medium, 2019.03.07,https://towardsdatascience.com/unsupervised-machine-learning-clustering-analysis-d40f2b34ae7e
 
-#### i. Learning Strategy
+#### i) Learning Strategy
 
-###### Unsupervised Learning Methodology: TF-IDF
+##### Unsupervised Learning Methodology: TF-IDF
 
 TF-IDF는 문서 내 단어마다 중요도를 고려하여 가중치를 주는 통계적인 단어 표현 방법이다. TF는 단어의 빈도를 고려하는 것이고, IDF는 역 문서 빈도를 고려하는 것으로 이 둘의 곱으로 TF-IDF를 구한다.
 
@@ -178,11 +180,11 @@ TF-IDF을 활용하여, 다음과 같은 분석 단계를 거쳐 비지도학습
 - 1-2) 각 계산된 가중치를 바탕으로 각 채팅에 대한 toxic score를 계산한다.
 - 1-3) 이후 지도학습에 활용될 column만을 남겨놓는다.
 
-#### ii. Code Explanation
+#### ii) Code Explanation
 
-###### 0. Initialize
+##### 0. Initialize
 
-**Package Import**
+**0-1) Package Import**
 
 ```R
 library(dplyr)
@@ -198,7 +200,7 @@ library(ggplot2)
 - wordcloud: Word Cloud을 활용한 시각화를 위한 패키지
 - ggplot2: 비지도학습 결과를 plotting 하기 위한 패키지.
 
-**Dir Setting and Read Dataset**
+**0-2) Dir Setting and Read Dataset**
 
 ```R
 setwd("~/your_folder")
@@ -207,9 +209,9 @@ chatlogs <- read.csv("./chatlogs.csv")
 
 Working Directory를 현재 폴더로 설정하고, 데이터 셋을 불러온다. 이후. 전처리 과정을 시행한다.
 
-###### 1. Feature Engineering
+##### 1. Feature Engineering
 
-**Ⅰ. Datasets 가지치기**
+**1-1) Datasets 가지치기**
 
 ```R
 chatlogs <- chatlogs %>% filter(association_to_offender == 'offender')
@@ -219,7 +221,7 @@ chatlogs <- subset(chatlogs, select = -association_to_offender)
 Datasets의 ‘association_to_offender’ 칼럼 중, “offender”에 해당하는 튜플만 추출한다. 이는 신고당한 사람의 채팅만을 선별하는 과정이다.
 추출한 뒤에는 ‘association_to_offender’ 칼럼은 “offender”라는 튜플 외 다른 튜플은 삭제된 의미없는 칼럼이기에 삭제한다.
 
-**Ⅱ. 일부 문법적 표현 및 게임특수성 관련 표현 제거**
+**1-2) 일부 문법적 표현 및 게임특수성 관련 표현 제거**
 
 ```R
 champion_names <- read.csv("./champion_names.csv")
@@ -235,7 +237,7 @@ write.csv(chatlogs, "processed.csv")
 이후 문법적으로 사용되는 영단어인 is, are, &lt, &gt 등도 불필요하기에 제거한다.
 처리한 Datasets을 새로 csv 파일로 저장한다.
 
-**Ⅲ. 심각도(severity)에 대한 feature engineering**
+**1-3) 심각도(severity)에 대한 feature engineering**
 
 ```R
 chatlogs$severity <- cut(
@@ -248,7 +250,7 @@ chatlogs$severity <- cut(
 
 Datasets의 'case total reports' 값을 기반으로 "severity"를 만든다. severity는 3단계로 나누는데, case total reports가 3 이하인 경우 Severe(심각), 4 이상 6 이하인 경우 Normal(보통), 7 이상인 경우 Low(낮음)이다. 이는 case total reports가 낮은 경우 적은 사용으로도 신고될 만큼 심각성이 크다고 생각했기 때문이다.
 
-**Ⅳ. 문자열 합치기**
+**1-4) 문자열 합치기**
 
 ```R
 concatenated <- chatlogs %>%
@@ -263,9 +265,9 @@ write.csv(concatenated, "concat.csv")
 
 이러한 전처리 과정 이후 TF-IDF matrix 분석을 한다. 이는 앞에서 합쳐진 문자열에 대해 TF-IDF를 처리하여 각 단어의 'toxic level'을 얻는 과정이다.
 
-###### 2. TF-IDF
+##### 2. TF-IDF
 
-**Ⅰ. TF-IDF를 위한 말뭉치(corpus)를 생성하고 추가 전처리를 진행**
+**2-1) TF-IDF를 위한 말뭉치(corpus)를 생성하고 추가 전처리를 진행**
 
 ```R
 corpus <- Corpus(VectorSource(concatenated$concatenated_text))
@@ -277,7 +279,7 @@ corpus <- tm_map(corpus, stripWhitespace)
 
 말뭉치(corpus)는 자연어 연구를 위해 특정한 목적을 가지고 언어의 표본을 추출한 집합을 뜻한다. 우리 조는 TF-IDF를 처리하기 위하여 말뭉치를 생성한다. 전처리 과정을 거친 텍스트에서 구두점, 여백, 관사 등을 제거하고 모든 문자열을 소문자로 변환한다.
 
-**Ⅱ. DTM 생성 & TF-IDF matrix 생성**
+**2-2) DTM 생성 & TF-IDF matrix 생성**
 
 ```R
 dtm <- DocumentTermMatrix(corpus)
@@ -286,9 +288,9 @@ tf_idf <- weightTfIdf(dtm)
 tf_idf <- t(as.matrix(tf_idf))
 ```
 
-TF-IDF를 위해 DTM(Document Term Matrix)를 생성한다. DTM은 Unspervised Learning 처음에 소개했던 대로 문서 단어 행렬이다. DTM을 바탕으로 TF-IDF matrix를 생성한다.
+TF-IDF를 위해 DTM(Document Term Matrix)를 생성한다. DTM은 Unsupervised Learning 처음에 소개했던 대로 문서 단어 행렬이다. DTM을 바탕으로 TF-IDF matrix를 생성한다.
 
-**Ⅲ. matrix 순서 바꾸기**
+**2-3) matrix 순서 바꾸기**
 
 ```R
 tf_idf_col_name <- paste(concatenated$most_common_report_reason, concatenated$severity, sep = "_")
@@ -297,7 +299,7 @@ colnames(tf_idf) <- tf_idf_col_name
 
 현재 matrix 순서대로면 메세지들이 한 행에 연달아 나오는 문제가 발생한다. 이를 해결하기 위하여 새로운 열(column)을 만들고 각 행마다 메세지들을 넣게 matrix의 순서를 바꾼다. 이제 신고 사유와 심각도를 분석하기 쉬워졌다.
 
-**Ⅳ. 값 보정**
+**2-4) 값 보정**
 
 ```R
 tf_idf <- round((tf_idf * 1000), 2)
@@ -305,7 +307,7 @@ tf_idf <- round((tf_idf * 1000), 2)
 
 toxic level을 얻기 위해 값을 보정하고 반올림한다.
 
-**Ⅴ. 새로운 데이터 프레임으로 변환**
+**2-5) 새로운 데이터 프레임으로 변환**
 
 ```R
 tf_idf_df <- as.data.frame(tf_idf)
@@ -315,7 +317,7 @@ write.csv(tf_idf_df, "toxic_lev.csv")
 
 완료된 TF-IDF matrix를 새로운 데이터 프레임으로 변환하고 'toxicity_lev.csv'라는 CSV 파일로 내보낸다.
 
-**Ⅵ. toxic score 정의 & 계산**
+**2-6) toxic score 정의 & 계산**
 
 ```R
 chatlogs$toxic_score <- 0
@@ -345,7 +347,7 @@ write.csv(res_log, "offender_chatlog_with_toxic_score.csv")
 
 Offender의 채팅 toxic level을 toxic score라는 새로운 칼럼을 정의하여 재구성한다. 이후 채팅 로그의 메시지를 추출한 뒤 각 단어의 앞뒤 공백을 제거하고 해당 단어의 TF-IDF 가중치를 가져와 채팅 로그의 toxic score를 계산하고 해당 열에 값을 저장한다.
 
-###### 3. Visualization
+##### 3. Visualization
 
 ```R
 # 1. Word Cloud -> Shows visualized output of tf-idf
@@ -364,9 +366,9 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 - Term의 가중치가 높을수록 더욱 글씨가 커지는 word cloud을 통해 시각화를 진행했다.
 - '신고 횟수는 심각도에 반비례 한다'는 전처리 과정 중의 가정을 시각화를 통해 입증한다.
 
-#### iii. Result Evaluation and Analysis
+#### iii) Result Evaluation and Analysis
 
-###### 1. Resulting Dataframe
+##### 1. Resulting Dataframe
 
 1. 각각의 열은 각각 순번, 데이터셋에 적혀있던 순번, 채팅 내용, 신고 사유, toxic score 순서대로 정렬되어 있다.
    <img width="658" alt="tf_idf_df" src="https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/920ab174-c1bb-46ab-a1bd-305df5fef27e">
@@ -379,23 +381,23 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 
 4. 비슷한 toxic score 임에도 채팅 길이의 차이가 있는 경우는 주로 적나라한 욕설이 있을수록 채팅이 짧아도 toxic score가 높게 측정되었다.
 
-###### 2. Result Analysis
+##### 2. Result Analysis
 
-**1. Scatter Plot: Case of Report and Severity**
+**A. Scatter Plot: Case of Report and Severity**
 ![TF_IDF  Scatter Plot](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/4ba98d24-b777-44d7-9cec-1fa05b4a8c06)
 
 - 위 그림은 TF-IDF 모델의 toxic score와 해당 유저의 신고 당한 횟수를 나타낸 것이다. 그래프는 toxic score이 높은 채팅일수록 적은 신고 횟수를 나타낸다.
 
 - 이는 수위가 높은 채팅일수록 더 적은 횟수의 신고만으로도 처벌이 이루어졌음을 의미하고, 동시에 toxic score을 도출하는 과정이 정확히 이루어졌음을 시사한다.
 
-**2. Word Cloud**
+**B. Word Cloud**
 ![TF_IDF  Word Cloud](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/0225d1c5-cd98-4dad-9d2b-42a34fc33b4b)
 
 - 위 그림은 TF-IDF 결과를 토대로 word cloud를 생성한 결과이다. 해당 word cloud는 특정 단어의 가중치가 높아질수록 단어의 크기가 커지는 형태인데, 상대적으로 일상에서 많이 쓰이는 단어가 상대적으로 큰 크기를 나타내는 것을 볼 수 있다.
 
 - 해당 시각화 결과물에서 주목해야 할 부분은 눈에 잘 보이는 단어들이 아닌 오히려 작아서 잘 보이지 않는 단어들이다. 앞선 scatter plot의 결과와 마찬가지로 전체 말뭉치(corpus) 중 특정 단어가 많이 언급된다는 의미는 반복된 표현임에도 toxic level이 낮아 실제 신고로 이어진 빈도가 낮다는 것이다.
 
-#### iv. Full Code
+#### iv) Full Code
 
 ```R
 # AI-X Final Project
@@ -547,7 +549,7 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 
 ---
 
-### **2. Spervised Learning (Regression)**
+### **2. Supervised Learning (Regression)**
 
 지도 학습(Supervised Learning)은 기계학습의 중요한 카테고리 중 하나로, 예시를 통해 학습하는 구조를 가지고 있다. 이 방식은 비지도 학습과는 대조적으로 학습을 위한 입력과 그에 대응하는 목표값(라벨)이 함께 제공된다. 이것은 관여자 또는 인간이 이미 문제에 대한 정답을 알고 있는 상황에서 사용된다. 인공지능 시스템은 주어진 입력 데이터를 기반으로 예측을 수행하고, 실제 목표값과 비교하여 오차를 최소화하도록 훈련된다. 이는 시스템이 주어진 작업에서 최적의 예측을 수행할 수 있도록 학습하는 데에 중점을 둔다. [^6]
 
@@ -561,21 +563,27 @@ ggplot(chatlogs, aes(x = case_total_reports, y = toxic_score, color = severity))
 
 #### i) Learning Strategy
 
-###### Supervised Learning Methodology: LSTM
+##### Supervised Learning Methodology: LSTM
 
-LSTM이란 Long Short-Term Memory Network의 약자로, RNN(Recurrent Neural Network)의 일종이다. 또한 RNN은 전통적인 전통적인 neural network에서 일어나는 문제를 해결하고자 만든 모델이다. 그렇기에 LSTM을 설명하기 위해선 우선 neural network와 RNN에 대한 설명이 선행되어야 할 것이다.
+LSTM이란 Long Short-Term Memory Network의 약자로, RNN(Recurrent Neural Network)의 일종이다.[^8] 또한 RNN은 전통적인 전통적인 neural network에서 일어나는 문제를 해결하고자 만든 모델이다. 그렇기에 LSTM을 설명하기 위해선 우선 neural network와 RNN에 대한 설명이 선행되어야 할 것이다.
+
+[^8]: 타리그 라시드(2017). 신경망 첫걸음. 한빛미디어.
 
 우선 neural network에 대한 설명이다. 전통적 컴퓨터는 동물의 뇌와 다른 구조적 차이를 가지고 있다. 그렇기에 동물의 뇌가 아주 단순히 처리할 수 있는 내용도 쉽게 처리 하기 어려웠다. 이를 해결하기 위한 방법이 생물의 신경망과 비슷하게 인공신경망을 만들어 낸 것이다. 생물학적 뉴런의 동작원리와 같이 여러 입력을 받고 이 입력값들이 일정 수준을 넘어서면 시그모이드 함수라는 활성화 함수를 활용하여 출력값을 내보내게 되는 것이다.
 
 그러나 전통적인 neural network에서는 생각을 지속적으로 하지 못한다는 단점이 있다. 이전에 일어나는 사건을 바탕으로 나중에 일어나는 사건을 생각할 수 없다는 것이다. 이러한 문제를 해결하기 위하여 만든 모델이 RNN이다. RNN또한 neural network이기에 입력값을 받아 출력값을 내놓는다. 그러나 스스로 반복하는 과정을 추가하여 이전 단계에서 얻은 정보가 지속되도록 하는것이다. 이렇게 RNN의 체인처럼 이어지는 성질은 음성 인식, 언어 모델링, 번역, 이미지 주석 생성 등 다양한 분야에서 데이터를 다루기 최적화된 구조의 neural network인 것이다.
 
-LSTM은 이러한 RNN의 특별한 한 종류이다. 기존의 RNN은 현재 시점의 무언가를 얻기 위하여 최근의 정보만을 필요로 하는, 즉 필요한 정보를 얻기 휘한 시간 격차가 크지 않을 때는 문제가 일어나지 않는다. 그러나 더 많은 문맥을 필요로 하여 시간 격차가 커지는 경우에 RNN은 학습하는 정보를 계속 이어나가기 어려워한다는 문제가 있다. 이에 LSTM은 명시적으로 설계되어 긴 의존 기간의 문제를 피할 수 있도록 하였다.
+LSTM은 이러한 RNN의 특별한 한 종류이다. 기존의 RNN은 현재 시점의 무언가를 얻기 위하여 최근의 정보만을 필요로 하는, 즉 필요한 정보를 얻기 휘한 시간 격차가 크지 않을 때는 문제가 일어나지 않는다. 그러나 더 많은 문맥을 필요로 하여 시간 격차가 커지는 경우에 RNN은 학습하는 정보를 계속 이어나가기 어려워한다는 문제가 있다. 이에 LSTM은 명시적으로 설계되어 긴 의존 기간의 문제를 피할 수 있도록 하였다. [^9]
+
+[^9]: 한땀컴비, "딥러닝 기본 네트워크 - LSTM", 한땀한땀 딥려닝 컴퓨터 비전 백과사전, https://wikidocs.net/152773
 
 이처럼 neural network와 RNN의 문제들을 보완하기 위해 만들어진 LSTM이기에 우리 조는 이러한 LSTM을 사용해 예측 모델을 학습시킨 후, 오차율과 모델의 결과값을 시각화 할 것이다.
 
-###### Supervised Learning Metodology: light GBM
+##### Supervised Learning Metodology: light GBM
 
-Gradient Boosting은 “Gradient”라는 개념을 이용하여 이전 모델의 약점을 보완하는 새로운 모델을 순차적으로 만든 뒤 이를 선형 결합하여 얻어낸 모델을 생성하는 지도 학습 알고리즘이다.
+Gradient Boosting은 “Gradient”라는 개념을 이용하여 이전 모델의 약점을 보완하는 새로운 모델을 순차적으로 만든 뒤 이를 선형 결합하여 얻어낸 모델을 생성하는 지도 학습 알고리즘이다. [^10]
+
+[^10]: kkiyou, "[머신러닝] LightGBM", Velog, https://velog.io/@kkiyou/lgbm
 
 이때 Gradient”는 residual fitting과 일맥상통한 개념으로 실제로 residual fitting은 예측값의 residual(잔차)를 줄여나가며 정확도를 높여가는 방식인데 gradient 역시 일종의 residual로 Gradient Boosting에서는 negative gradient를 이용하여 다음 모델을 순차적으로 만들어 나간다.
 
@@ -583,9 +591,11 @@ Gradient Boosting은 “Gradient”라는 개념을 이용하여 이전 모델�
 
 이 중 우리 모델에 사용된 Light GBM은 XGBoost에 비해 훈련 시간이 짧고 성능도 좋아 부스팅 알고리즘에서 가장 많은 주목을 받고 있는 알고리즘으로 Gradient Boosting을 발전시킨 것이 XGBoost, 여기서 속도를 더 높인 것이 LightGBM이다.
 
-LightGBM은 트리 기준 분할이 아닌 리프 기준 분할 방식을 사용한다. 트리의 균형을 맞추지 않고 최대 손실 값을 갖는 리프 노드를 지속적으로 분할하면서 깊고 비대칭적인 트리를 생성한다. 이렇게 하면 트리 기준 분할 방식에 비해 예측 오류 손실을 최소화할 수 있다.
+LightGBM은 트리 기준 분할이 아닌 리프 기준 분할 방식을 사용한다. 트리의 균형을 맞추지 않고 최대 손실 값을 갖는 리프 노드를 지속적으로 분할하면서 깊고 비대칭적인 트리를 생성한다. 이렇게 하면 트리 기준 분할 방식에 비해 예측 오류 손실을 최소화할 수 있다. [^11]
 
-###### Strategy
+[^11]: LightGBM. (n.d.). LightGBM Documentation. Retrieved from https://lightgbm.readthedocs.io/en/stable/
+
+##### Strategy
 
 이번 지도학습의 목표는 <Regression 작업> 메시지의 toxic level을 예측할 수 있는 모델을 구축하는 것이다. 전략은 다음과 같다.
 
@@ -599,9 +609,41 @@ LightGBM은 트리 기준 분할이 아닌 리프 기준 분할 방식을 사용
 
 #### ii) Code Explanation
 
-###### 1. Feature Engineering
+##### 0. Initialize
 
-**Ⅰ. 값 정리**
+**0-1) Package Import**
+
+```R
+library(keras)
+library(tensorflow)
+library(reticulate)
+library(lightgbm)
+```
+
+먼저 필요한 R package를 불러온다. 필요한 패키지는 다음과 같다.
+
+- keras: LSTM Model을 위한 패키지
+- tensorflow: LSTM의 학습을 위한 패키지 (Python Package)
+- reticulate: Python과 interfacing을 위한 패키지
+- lightgbm: LightGBM Model을 위한 패키지
+
+**0-2) Dir Setting and Read Dataset**
+
+```R
+setwd("~/Desktop/Dev/HYU/2023-02/AI-X/project/gamechatban") # Change this value to your working dir.
+
+reticulate::py_config() # Show python interpreter currently configured to use.
+# Read a dataset for supervised learning.
+processed_df <- read.csv('./offender_chatlog_with_toxic_score.csv')
+```
+
+Working Directory를 현재 폴더로 설정하고, 데이터 셋을 불러온다. 이후. 전처리 과정을 시행한다.
+
+- (해당 regression task는 Python과의 interfacing이 필요하기에, `reticulate`을 활용하여 interface가 잘 되었는지 python configuration을 출력함으로서 확인한다.)
+
+##### 1. Feature Engineering
+
+**1-1) 값 정리**
 
 ```R
 processed_df <- na.omit(processed_df)
@@ -610,7 +652,7 @@ processed_df <- processed_df[processed_df$toxic_score != 0, ]
 
 빈 값이 있거나 Toxic score가 0인 행을 제거한다. 이로 인해 약 30만개였던 행의 수가 약 20만개로 줄어 데이터 처리가 수월해진다.
 
-**Ⅱ. LSTM을 위한 텍스트 전처리**
+**1-2) LSTM을 위한 텍스트 전처리**
 
 ```R
 tokenizer <- text_tokenizer()
@@ -622,7 +664,7 @@ LSTM을 위한 텍스트 전처리가 선행되어야한다.
 우선 텍스트 tokenizer를 생성한다. 이것이 텍스트 데이터를 신경망에 공급할 수 있는 형식으로 변환해줄 것이다.
 그 이후 'processed_df' 데이터프레임의 메시지에 대해 텍스트 tokenizer를 학습한다.
 
-**Ⅲ. 정수 시퀀스 변환**
+**1-3) 정수 시퀀스 변환**
 
 ```R
 sequences <- texts_to_sequences(tokenizer, processed_df$message)
@@ -640,9 +682,9 @@ test_labels <- processed_df$toxic_score[-sample_index]
 피팅된 tokenizer를 사용하여 텍스트 메시지를 정수 시퀀스로 변환합니다. 이후 시퀀스를 균일한 길이로 패딩한다. 이때 최대 길이는 50 token으로 정하였는데, 이는 텍스트 메세지의 최대 길이가 48이었기 때문이다.
 전략에서 말했듯이 데이터를 학습데이터와 테스트 데이터로 랜덤하게 분할한다. 비율은 학습데이터가 75%, 테스트 데이터가 25%이다.
 
-###### 2.LSTM 모델을 사용한 regression 모델 구축
+##### 2.LSTM 모델을 사용한 regression 모델 구축
 
-**Ⅰ. LSTM 모델 만들기**
+**2-1) LSTM 모델 만들기**
 
 ```R
 model <- keras_model_sequential()
@@ -655,7 +697,7 @@ model <- keras_model_sequential()
 - 2. 'output_dim'은 밀집 임베딩의 차원이다.
 - 3. 'input_length'는 입력 시퀀스의 길이로, 50 토큰으로 패딩됐다.
 
-**Ⅱ. 메세지 고유 단어 추출**
+**2-2) 메세지 고유 단어 추출**
 
 ```R
 unique_words <- unique(unlist(strsplit(tolower(processed_df$message), " ")))
@@ -666,7 +708,7 @@ embedding_dim <- round(sqrt(vocabulary_size))
 
 각 메시지에서 고유한 단어를 추출한다. 어휘 크기는 input dim 값이고, outd의 크기는 어휘 크기의 제곱근으로 설정하였다.
 
-**Ⅲ. 임베딩 레이어 추가**
+**2-3) 임베딩 레이어 추가**
 
 ```R
 model %>%
@@ -677,7 +719,7 @@ model %>%
 
 계산된 어휘 크기와 임베딩 크기를 기반으로 임베딩 레이어 추가한다.
 
-**Ⅳ. 모델 컴파일**
+**2-4) 모델 컴파일**
 
 ```R
 model %>% compile(
@@ -689,7 +731,7 @@ model %>% compile(
 
 Adam optimizer, regression을 위한 평균 제곱 오차 손실, 추가적인 메트릭으로 평균 절대 오차 값을 활용하여 모델을 컴파일한다.
 
-**Ⅴ. 모델학습**
+**2-5) 모델학습**
 
 ```R
 lstm_start_time <- Sys.time()
@@ -708,7 +750,7 @@ cat("Training Time (LSTM): ", lstm_elapsed_time, "\n")
 
 모델을 학습시키고 이 과정에서 학습 시작 시간과 종료 시간을 체크한다. 이후 경과 시간을 평가한다.
 
-**Ⅵ. 모델 평가 및 시각화**
+**2-6) 모델 평가 및 시각화**
 
 ```R
 model %>% evaluate(test_data, test_labels)
@@ -720,9 +762,9 @@ legend("topright", legend = c("Training Loss", "Validation Loss"), col = c("blue
 
 모델을 평가하고 training loss와 validation loss를 시각화한다.
 
-###### 3. LightGBM을 사용한 regression 모델 구축
+##### 3. LightGBM을 사용한 regression 모델 구축
 
-**Ⅰ. 학습 준비**
+**3-1) 학습 준비**
 
 ```R
 lgb_data <- lgb.Dataset(train_data, label = train_labels)
@@ -736,7 +778,7 @@ lgb_params <- list(
 
 Rgression을 위한 LightGBM 모델을 만든다. 학습 데이터에 LightGBM 데이터셋을 넣고, regression 목표 및 평가 메트릭을 포함하여 LightGBM 매개변수를 설정한다.
 
-**Ⅱ. 모델학습**
+**3-2) 모델학습**
 
 ```R
 lgb_start_time <- Sys.time()
@@ -751,7 +793,7 @@ cat("Training Time (LSTM): ", lgb_elapsed_time, "\n")
 
 LSTM 때와 마찬가지로 모델을 학습시키고 이 과정에서 학습 시작 시간과 종료 시간을 체크한다. 이후 경과 시간을 평가한다.
 
-**Ⅲ. 테스트 셋 예측과 모델 평가**
+**3-3) 테스트 셋 예측과 모델 평가**
 
 ```R
 predictions <- predict(lgb_model, test_data)
@@ -763,7 +805,7 @@ cat("Root Mean Squared Error (RMSE):", rmse, "\n")
 
 테스트 세트를 예상한다. 그리고 RMSE (Root Mean Squared Error)를 계산한다.
 
-###### 4. Visualization
+##### 4. Visualization
 
 ```R
 residuals <- predictions - test_labels
@@ -777,9 +819,7 @@ qqline(residuals, col = "red")
 
 #### iii) Result Evaluation and Analysis
 
-###### 1. Result: LSTM
-
-**1. LSTM: Training and Validation Loss Graph**
+**A. LSTM: Training and Validation Loss Graph**
 ![LSTM_Graphical Result](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/977e0eb3-00ed-40a7-a3ea-c6cc0d2cd839)
 
 - Epoch별 training의 결과를 나타낸 그래프이다.
@@ -795,7 +835,7 @@ qqline(residuals, col = "red")
 
 - 그러나 동시에, overfitting이 발생하였다는 것은 모델의 수용능력이 데이터의 복잡한 관계를 학습하기에 충분하다고도 해석할 수 있고, overfitting 여부를 확인할 수 있었기 때문에 이를 방지하는 방향으로 모델을 개선해 나갈 수 있다.
 
-**2. LightGBM: Q-Q Plot**
+**B. LightGBM: Q-Q Plot**
 ![LightGBM: QQPlot](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/57d32da5-6ed6-4c59-ba9e-e3788e62bb4a)
 
 - 위 그림은 Light GBM 모델의 Q-Q plot이다. 해당 plot을 보면 기준선을 기준으로 양쪽, 위 아래로 전반적으로 대칭을 이루고 있고, 중심부에 점들이 집중적으로 분표한다. 하지만 양끝 값으로 갈수록 기준선으로부터 멀어지고 꼬리 값이 더 두꺼운 분포를 보인다.
@@ -804,10 +844,10 @@ qqline(residuals, col = "red")
 <img width="516" alt="q-q" src="https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/6bef0e79-1ee2-49ff-9d0b-77ca88b5a7fb">
 </p>
 
-- 위 그림[^8] 속 plot 중 우리 모델에 가장 가까운 것은 **heavy-tailed**이다. 이는 Light GBM 모델을 통해 평가했을 때 Theoretical Quantile이 Sample Quantile보다 작다는 것을 의미한다.
+- 위 그림[^12] 속 plot 중 우리 모델에 가장 가까운 것은 **heavy-tailed**이다. 이는 Light GBM 모델을 통해 평가했을 때 Theoretical Quantile이 Sample Quantile보다 작다는 것을 의미한다.
 - 이를 정리하면, 모델의 분포에 비정규성이 존재하며 이는 regression 모델에 오차가 존재할 수 있음을 나타낸다.
 
-[^8]: yuns_u, QQ Plot 해석하기, Velog, https://velog.io/@yuns_u/QQ-plot-%ED%95%B4%EC%84%9D%ED%95%98%EA%B8%B0
+[^12]: yuns_u, QQ Plot 해석하기, Velog, https://velog.io/@yuns_u/QQ-plot-%ED%95%B4%EC%84%9D%ED%95%98%EA%B8%B0
 
 #### iv) Full Code
 
@@ -820,7 +860,6 @@ qqline(residuals, col = "red")
 # Column: X(id), Message, Most common report reason, Toxic Score
 
 library(keras) # R Package: LSTM Model
-library(caret) # R Package:
 library(tensorflow) # R Package: Tensorflow
 library(reticulate) # R Package for interfacing with python
 library(lightgbm) # R PAckage: LightGBM
@@ -975,15 +1014,17 @@ qqnorm(residuals)
 qqline(residuals, col = "red")
 ```
 
-### **3. Spervised Learning (Classification)**
+### **3. Supervised Learning (Classification)**
 
 이제 남은 분류 작업을 진행할 차례이다. 이번에는 toxic level을 예측하는 것 말고도 이 메시지가 어떤 'most_common_report_reason'에 속하는지 예측하는 것도 우리 조의 목적이었다. 이를 위해 지도학습 중 분류를 진행할 것이다. 모델은 Random Forest를 사용한다. 이 모델을 이용하여 기존의 데이터셋을 학습시키고, 메시지가 'most_common_report_reason' 중 어디에 속하는지를 예측할 수 있도록 할 것이다.
 
 #### i) Learning Strategy
 
-###### Random Forest Classifier
+##### Random Forest Classifier
 
-Random Forest는 머신러닝 기법 중 하나고, 오버피팅을 방지하기 위해, 최적의 기준 변수를 랜덤 선택한다. Forest라는 말이 들어간 이유는 마치 숲을 이루듯이 여러 개의 의사결정트리들이 앙상블을 형성하여 Random Forest를 만들기 때문이다.
+Random Forest는 머신러닝 기법 중 하나고, 오버피팅을 방지하기 위해, 최적의 기준 변수를 랜덤 선택한다. Forest라는 말이 들어간 이유는 마치 숲을 이루듯이 여러 개의 의사결정트리들이 앙상블을 형성하여 Random Forest를 만들기 때문이다. [^13]
+
+[^13]: scikit-learn. (n.d.). RandomForestClassifier Documentation. Retrieved from https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
 
 여기서 앙상블이란 강력한 하나의 모델을 사용하지 않고, 약한 여러 개의 모델을 사용하는 것이다. 의사결정트리들의 예측들을 조합하여 결론을 도출한다. 다양한 예측들을 이용하기에 더 정확한 예측이 가능해진다.
 
@@ -991,13 +1032,15 @@ Random Forest는 머신러닝 기법 중 하나고, 오버피팅을 방지하기
 
 이후 의사결정트리들을 합치는 과정(Aggregating)을 거친다. 이는 문제의 종류에 따라 방식이 달라진다. 회귀 문제의 경우 기본 모델들의 결과들을 평균 내고, 분류 문제일 경우 다수결로 투표해서 가장 많은 투표를 받은 것을 결과로 낸다.
 
-Random Forest는 분류와 회귀 문제를 모두 다룰 수 있으며 편의성과 유연성이 뛰어나다. 결측치를 다루기 쉽고, 대용량 데이터 처리가 쉽다는 장점도 가지고 있다. 또한 과적합 문제를 해결해주고, 특성중요도를 구할 수 있다. 이러한 장점을 가지고 있기에 우리 조는 지도학습의 장치로 Random Forest를 사용할 것이다.
+Random Forest는 분류와 회귀 문제를 모두 다룰 수 있으며 편의성과 유연성이 뛰어나다. 결측치를 다루기 쉽고, 대용량 데이터 처리가 쉽다는 장점도 가지고 있다. 또한 과적합 문제를 해결해주고, 특성중요도를 구할 수 있다. [^14] 이러한 장점을 가지고 있기에 우리 조는 지도학습의 장치로 Random Forest를 사용할 것이다.
+
+[^14]: Breiman L (2001). "Random Forests". Machine Learning.
 
 #### ii) Code Explanation
 
-###### 0. Initialize
+##### 0. Initialize
 
-**I. Package Import**
+**0-1) Package Import**
 
 ```R
 library(randomForest)
@@ -1011,7 +1054,7 @@ library(pROC)
 - caret: 복잡한 회귀와 분류 문제에 대한 모형 훈련과 조절과정을 간소화하는 패키지
 - pROC: pROC curve 패키지
 
-**II. Dir Setting and Read Dataset**
+**0-2) Dir Setting and Read Dataset**
 
 ```R
 setwd("~/your_folder")
@@ -1021,9 +1064,9 @@ sampled_df <- processed_df[complete.cases(processed_df[,c("message", "most_commo
 
 Working Directory를 현재 폴더로 설정하고, 전처리 과정을 거친 데이터 셋을 불러온다. 데이터셋에서 결측치는 제거한다.
 
-###### 1.Feature Engineering
+##### 1.Feature Engineering
 
-**Ⅰ. 범주형 변수로 변환**
+**1-1) 범주형 변수로 변환**
 
 ```R
 sampled_df$most_common_report_reason = as.factor(sampled_df$most_common_report_reason)
@@ -1033,7 +1076,7 @@ sampled_df$most_common_report_reason = as.factor(sampled_df$most_common_report_r
 
 범주형으로 바꾸는 함수는 as.factor()이고, 'most_common_report_reason'라는 기존에 있는 변수를 범주형으로 덮어쓰기 위해 위의 코드를 사용한다.
 
-**Ⅱ. 정수 시퀀스 변환**
+**1-2) 정수 시퀀스 변환**
 
 ```R
 set.seed(sample(100:1000,1,replace=F)) # Random sampling
@@ -1049,9 +1092,9 @@ Supervised Learning(Regression)에서 사용한 것과 동일하게 데이터를
 
 이후 train_data와 test_data 간의 column이 일치하는지 확인한다.
 
-###### 2. Random Forest Classification
+##### 2. Random Forest Classification
 
-**Ⅰ. 모델학습**
+**2-1) 모델학습**
 
 ```R
 rf_start_time <- Sys.time()
@@ -1066,7 +1109,7 @@ cat("Training Time (SVM): ", rf_elapsed_time, "\n")
 
 모델을 학습시키고 이 과정에서 학습 시작 시간과 종료 시간을 체크한다. 이후 경과 시간을 평가한다.
 
-**Ⅱ. 모델 테스트**
+**2-2) 모델 테스트**
 
 ```R
 rf_predictions <- predict(rf_model, newdata = test_data)
@@ -1077,7 +1120,7 @@ accuracy_rf <- sum(diag(confusion_matrix_rf)) / sum(confusion_matrix_rf)
 
 위에서 학습시킨 모델을 토대로 'test_data'에 대한 예측을 수행하게 한다. 이후 혼돈행렬과 정확도로 나타낸다.
 
-**Ⅲ. 결과 출력**
+**2-3) 결과 출력**
 
 ```R
 print("Confusion Matrix (Random Forest):")
@@ -1087,9 +1130,9 @@ cat("Accuracy (Random Forest):", accuracy_rf, "\n")
 
 Random Forest 예측결과에 따라 Confusion Matrix와 정확도를 출력하는 작업을 한다.
 
-###### 3. Visualization
+##### 3. Visualization
 
-**I. 시각화: Heatmap**
+**3-1) 시각화: Heatmap**
 
 ```R
 conf_mat_rf <- confusionMatrix(rf_predictions, test_data$most_common_report_reason)
@@ -1107,7 +1150,7 @@ Random Forest 모델의 예측 결과를 시각화하기 위해 Confusion Matrix
 
 확률을 셋으로 나눠서 확률이 높은 순서부터 blue, lightblue, white이다.
 
-**II. 시각화: ROC curve**
+**3-2) 시각화: ROC curve**
 
 ```R
 rf_probs <- as.numeric(predict(rf_model, newdata = test_data, type = "response"))
@@ -1131,7 +1174,7 @@ Random Forest에 대한 ROC curve를 생성하고 시각화는 작업을 수행�
 
   - 위 표에서는 예측 값과 실제 값의 일치 여부에 따라 총 4개의 경우의 수로 나타낸 것이다. 각각 TP(True Positive)는 긍정예측을 성공, TN(True Negative)는 부정예측을 성공, FP(False Positive)는 긍정예측을 실패, FN(False Negative)는 부정예측을 실패한 경우를 의미한다. 위 경우의 수가 발생한 횟수를 계산하여 정확도, 민감도, 정밀도 등의 평가 척도를 계산할 수 있다.
 
-**1. RF-Classifier: Heatmap**
+**A. RF-Classifier: Heatmap**
 
 ![Heatmap (improved)](https://github.com/KyumKyum/gamechatban.github.io/assets/59195630/a5326c3d-fb4f-46dd-8f81-6fa1c5a5225f)
 
@@ -1140,7 +1183,7 @@ Random Forest에 대한 ROC curve를 생성하고 시각화는 작업을 수행�
   - 신고 사유 Inappropriate Name(부적절한 이름), Spamming(스팸성 채팅)는 모두 가장 높은 비율로 예측 신고 사유와 실제 신고 사유가 일치했다.
   - 가장 정확도가 낮은 예측 값은 신고 사유 Negative Attitude였는데 이는 Inappropriate Name 사유만을 제외한 나머지 실제 신고 사유에 모두 높은 비율로 분포했다.
 
-**2. RF-Classifier: ROC Curve**
+**B. RF-Classifier: ROC Curve**
 
 - ROC curve는 False Positive Rate(FPR)와 True Positive Rate(TPR)를 각각 x축, y축에 표시한 그래프로 모델의 민감도(sensitivity)와 특이도(specificity)를 평가하기 위해 사용한다. Heatmap에 이어, ROC Curve 역시 random forest에서 도출된 confusion matrix를 시각화 하는 데에 사용되었다.
 
@@ -1244,11 +1287,7 @@ plot(roc_curve, col = "blue", main = "ROC Curve for Random Forest",
 
 # V. Video Link
 
-<div position="relative", align="center">
-    <iframe width="640" height="390" 
-    src="https://www.youtube.com/embed/2JzGY2u0wz8" 
-    frameborder="0" allowfullscreen></iframe>
-</div>
+{% include youtube.html id="2JzGY2u0wz8" %}
 
 ---
 
@@ -1283,6 +1322,24 @@ Random Forest에 대해서는 사유마다 예측 일치 비율이 다르다는 
 
 6. Manning, C.D., Raghavan, P. Schutze, et. al, "Scoring, term weighting, and the vector space model", Introduction to Information Retrieval.
 
-7. Christopher M. Bishop, "Pattern Recognition and Machine Learning", 2006
+7. Christopher M. Bishop, "Pattern Recognition and Machine Learning", 2006, Springer
 
-8. Pedro Domingos, "A Few Useful Things to Know About Machine Learning", 2012
+8. Pedro Domingos, "A Few Useful Things to Know About Machine Learning", 2012, Association for Computing Machinery
+
+9. Sak, Hasim; Senior, Andrew; Beaufays, Francoise (2014). "Long Short-Term Memory recurrent neural network architectures for large scale acoustic modeling"
+
+10. LightGBM. (n.d.). LightGBM Documentation. Retrieved from https://lightgbm.readthedocs.io/en/stable/
+
+11. A. Marden, J. I. (2004). Positions and QQ plots. Statistical Science, 606-614.
+
+12. Ho, Tin Kam (1995). “Random Decision Forests.” Proceedings of the 3rd International Conference on Document Analysis and Recognition, Montreal, QC, 14–16 August 1995.
+
+13. Ho TK (1998). "The Random Subspace Method for Constructing Decision Forests". IEEE Transactions on Pattern Analysis and Machine Intelligence.
+
+14. Breiman L (2001). "Random Forests". Machine Learning.
+
+15. Dietterich, Thomas (2000). "An Experimental Comparison of Three Methods for Constructing Ensembles of Decision Trees: Bagging, Boosting, and Randomization". Machine Learning.
+
+16. A. Deng, X., Liu, Q., Deng, Y., & Mahadevan, S. (2016). An improved method to construct basic probability assignment based on the confusion matrix for classification problem. Information Sciences, 340, 250-261.
+
+17. A. Park, S. H., Goo, J. M., & Jo, C. H. (2004). Receiver operating characteristic (ROC) curve: practical review for radiologists. Korean journal of radiology, 5(1), 11-18.
