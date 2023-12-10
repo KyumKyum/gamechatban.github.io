@@ -1,8 +1,12 @@
 # 2023-02 Ai-X Deep Learning Project
 
+---
+
 #### Chatting Toxicity Score Analysis via Unsupervised/Supervised Learning
 
 ##### 비지도학습/지도학습 기반 게임 채팅 toxic score 측정 및 가능한 신고 사유 예측
+
+---
 
 ###### 생명과학과 2018023427 이승현
 
