@@ -1303,6 +1303,12 @@ plot(roc_curve, col = "blue", main = "ROC Curve for Random Forest",
 
 # V. Video Link
 
+> Video 1: Explanation of the Deep-learning project
+
+{% include youtube.html id="n9BhfEYPhis" %}
+
+> Video 2: Deep Learning Project - Learning Progress
+
 {% include youtube.html id="2JzGY2u0wz8" %}
 
 ---
